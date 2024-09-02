@@ -4,11 +4,14 @@
 
 
 ## Getting started
-Node.js (※[バージョン情報](./.node-version)) が使える環境で下記コマンドを実行してください。
-
-``` shell
-npm ci
-```
+1. `./schemas` にJSON Schema を配置する
+    ```
+    schemas/
+        json-schema/*.json
+        defaults.json
+    ```
+1. Node.js (※[バージョン情報](./.node-version)) が使える環境で `npm ci` を実行する
+1. VSCode で `F5` キーを入力する (※ `npm start` + ブラウザ起動)
 
 
 

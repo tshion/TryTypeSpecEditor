@@ -219,3 +219,5 @@ $RECYCLE.BIN/
 ### Project ###
 ###############
 .angular/
+schemas/
+schema.ts
