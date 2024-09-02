@@ -25,6 +25,7 @@ const path = require('path');
         const obj = JSON.parse(file);
         result.push({
           name: path.basename(filePath).replace('.json', ''),
+          description: obj['description'],
           schema: obj['properties'],
         });
       }
@@ -41,19 +42,19 @@ const path = require('path');
 
 
   // 入力の書式データへ変換
-  const list = [];
+  const groups = [];
   const fxGetType = (prop) => {
     return prop['type']
       ?? prop['$ref']
       ?? (prop['anyOf'] ? 'anyOf' : undefined);
   };
   for (const domain of jsonSchemas) {
+    const list = [];
     for (const [k, v] of Object.entries(domain.schema)) {
       const isArray = v['type'] === 'array';
       const type = isArray ? fxGetType(v['items']) : fxGetType(v);
 
       const item = {
-        group: domain.name,
         isArray: isArray,
         key: k,
         label: v['description'],
@@ -110,13 +111,18 @@ const path = require('path');
       }
       list.push(item);
     }
+    groups.push({
+      name: domain.name,
+      description: domain.description,
+      items: list,
+    });
   }
 
 
   // 入力書式データのファイル出力
   const template = fs.readFileSync(path.join(rootPath, `convert-schema.template.ts`)).toString()
     .replace('%%VERSION%%', version)
-    .replace('[/** Data */]', JSON.stringify(list, null, 4));
+    .replace('[/** Data */]', JSON.stringify(groups, null, 4));
   fs.writeFileSync(
     path.join(rootPath, 'src', 'schema.ts'),
     template,
