@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+@import "purecss/build/base.css";
+@import "purecss/build/buttons.css";
+@import "purecss/build/forms.css";
+
+:root {
+    /* --app-color-base:  */
+}

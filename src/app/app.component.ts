@@ -5,12 +5,28 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <h1>Welcome to {{title}}!</h1>
-
-
+    <nav class="pure-menu pure-menu-scrollable">
+    </nav>
+    <main>
+    </main>
   `,
-  styles: [],
+  styles: [
+    `:host {
+      display: flex;
+      flex-direction: row;
+    }`,
+    `main {
+      flex-grow: 1;
+      height: 100vh;
+      overflow-y: scroll;
+    }`,
+    `nav {
+      background-color: #333333;
+      color: #FFFFFF;
+      height: 100vh;
+      width: 360px;
+    }`,
+  ],
 })
 export class AppComponent {
-  title = 'try-typespec-editor';
 }
