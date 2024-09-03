@@ -4,5 +4,25 @@
 @import "purecss/build/forms.css";
 
 :root {
-    /* --app-color-base:  */
+    /* --app-color-accent: ; */
+    /* --app-color-accent-on: ; */
+    --app-color-base: #ffffff;
+    --app-color-base-on: #000000;
+    /* --app-color-danger: ; */
+    /* --app-color-danger-on: ; */
+    --app-color-main: #333333;
+    --app-color-main-on: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* --app-color-accent: ; */
+        /* --app-color-accent-on: ; */
+        --app-color-base: #000000;
+        --app-color-base-on: #ffffff;
+        /* --app-color-danger: ; */
+        /* --app-color-danger-on: ; */
+        /* --app-color-main: ; */
+        /* --app-color-main-on: ; */
+    }
 }
