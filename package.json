@@ -3,6 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
+        "lint": "ng lint",
         "prestart": "npm run prebuild debug-preview",
         "start": "ng serve",
         "prebuild": "node convert-schema.js",
@@ -29,6 +30,9 @@
         "@angular-devkit/build-angular": "^18.2.2",
         "@angular/cli": "^18.2.2",
         "@angular/compiler-cli": "^18.2.0",
-        "typescript": "~5.5.2"
+        "angular-eslint": "18.3.0",
+        "eslint": "^9.9.0",
+        "typescript": "~5.5.2",
+        "typescript-eslint": "8.1.0"
     }
 }
