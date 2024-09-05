@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { schemaData } from '../schema';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+  ],
   template: `
     <nav class="pure-menu pure-menu-scrollable">
       <hgroup>
         <h1>TypeSpecEditor</h1>
-        {{ appVersion }}
+        {{ schemaData.version }}
       </hgroup>
       <hr />
       <form class="pure-form pure-form-stacked">
@@ -28,8 +33,25 @@ import { schemaData } from '../schema';
       </ul>
     </nav>
     <main>
-      bbb
-      <button class="pure-button">ccc</button>
+      <form [formGroup]="form" class="pure-form pure-form-aligined">
+        @for (group of schemaData.groups; track group) {
+          <hgroup>
+            <h2>{{ group.name }}</h2>
+            <p>{{ group.description }}</p>
+          </hgroup>
+          @for (item of group.items; track item) {
+            <div [formArrayName]="item.key">
+              <hgroup>
+                <h3>{{ item.key }}</h3>
+                <p>{{ item.label }}</p>
+              </hgroup>
+              <div *ngFor="let _ of getControls(item.key).controls; let i = index" class="pure-control-group">
+                <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i" [pattern]="item.pattern ?? ''" />
+              </div>
+            </div>
+          }
+        }
+      </form>
     </main>
   `,
   styles: [
@@ -62,7 +84,25 @@ import { schemaData } from '../schema';
     }`,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  public readonly appVersion = schemaData.version;
+  public form!: FormGroup;
+
+  public readonly schemaData = schemaData;
+
+
+  ngOnInit(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const controls: any = {};
+    this.schemaData.groups.flatMap(group => group.items).forEach(item => {
+      const children = item.value.map(value => new FormControl(value));
+      controls[item.key] = new FormArray(children);
+    });
+    this.form = new FormGroup(controls);
+  }
+
+
+  public getControls(key: string) {
+    return this.form.controls[key] as FormArray;
+  }
 }
