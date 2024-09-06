@@ -1,14 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { schemaData } from '../schema';
+import { NegativeButtonComponent } from './atoms/negative-button.component';
+import { NeutralButtonComponent } from './atoms/neutral-button.component';
+import { PositiveLinkButtonComponent } from './atoms/positive-link-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
+    FontAwesomeModule,
+    NegativeButtonComponent,
+    NeutralButtonComponent,
     ReactiveFormsModule,
+    PositiveLinkButtonComponent,
   ],
   template: `
     <nav class="pure-menu pure-menu-scrollable">
@@ -23,7 +32,12 @@ import { schemaData } from '../schema';
         <label for="meta-title">タイトル</label>
         <input type="text" id="meta-title" class="pure-input-1" />
 
-        <button type="button" class="pure-button">ファイル出力</button>
+        <app-positive-link-button>
+          <fa-icon [icon]="faFloppyDisk" />新規作成
+        </app-positive-link-button>
+
+        <app-neutral-button>aaa</app-neutral-button>
+        <app-negative-button>bbb</app-negative-button>
       </form>
       <hr />
       <ul class="pure-menu-list">
@@ -85,6 +99,8 @@ import { schemaData } from '../schema';
   ],
 })
 export class AppComponent implements OnInit {
+
+  public readonly faFloppyDisk = faFloppyDisk;
 
   public form!: FormGroup;
 
