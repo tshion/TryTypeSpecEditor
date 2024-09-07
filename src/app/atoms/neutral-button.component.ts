@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * 中立的な文脈で使うボタン
@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   selector: 'app-neutral-button',
   standalone: true,
   template: `
-    <button class="pure-button">
+    <button class="pure-button" [type]="type">
       <ng-content />
     </button>
   `,
@@ -19,4 +19,7 @@ import { Component } from '@angular/core';
   ],
 })
 export class NeutralButtonComponent {
+
+  @Input()
+  public type: 'submit' | 'reset' | 'button' = 'button';
 }

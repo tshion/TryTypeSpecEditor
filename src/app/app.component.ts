@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { schemaData } from '../schema';
 import { NegativeButtonComponent } from './atoms/negative-button.component';
 import { NeutralButtonComponent } from './atoms/neutral-button.component';
@@ -35,9 +35,6 @@ import { PositiveLinkButtonComponent } from './atoms/positive-link-button.compon
         <app-positive-link-button>
           <fa-icon [icon]="faFloppyDisk" />新規作成
         </app-positive-link-button>
-
-        <app-neutral-button>aaa</app-neutral-button>
-        <app-negative-button>bbb</app-negative-button>
       </form>
       <hr />
       <ul class="pure-menu-list">
@@ -58,9 +55,29 @@ import { PositiveLinkButtonComponent } from './atoms/positive-link-button.compon
               <hgroup>
                 <h3>{{ item.key }}</h3>
                 <p>{{ item.label }}</p>
+                @if (item.isArray) {
+                  <app-neutral-button>
+                    <fa-icon [icon]="faPlus" />入力欄追加
+                  </app-neutral-button>
+                }
+                <!--
+                @if (hasChange(item)) {
+                -->
+                  <app-neutral-button>
+                    <fa-icon [icon]="faRotateRight" />既定に戻す
+                  </app-neutral-button>
+                <!--
+                  <span style="color: red;">※変更中</span>
+                }
+                -->
               </hgroup>
               <div *ngFor="let _ of getControls(item.key).controls; let i = index" class="pure-control-group">
-                <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i" [pattern]="item.pattern ?? ''" />
+                <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i" class="pure-input-3-4" [pattern]="item.pattern ?? ''" />
+                @if (item.isArray) {
+                  <app-negative-button>
+                    <fa-icon [icon]="faTrash" />入力欄削除
+                  </app-negative-button>
+                }
               </div>
             </div>
           }
@@ -101,6 +118,12 @@ import { PositiveLinkButtonComponent } from './atoms/positive-link-button.compon
 export class AppComponent implements OnInit {
 
   public readonly faFloppyDisk = faFloppyDisk;
+
+  public readonly faPlus = faPlus;
+
+  public readonly faRotateRight = faRotateRight;
+
+  public readonly faTrash = faTrash;
 
   public form!: FormGroup;
 

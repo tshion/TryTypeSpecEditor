@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * 否定的な文脈で使うボタン
@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   selector: 'app-negative-button',
   standalone: true,
   template: `
-    <button class="pure-button">
+    <button class="pure-button" [type]="type">
       <ng-content />
     </button>
   `,
@@ -19,4 +19,7 @@ import { Component } from '@angular/core';
   ],
 })
 export class NegativeButtonComponent {
+
+  @Input()
+  public type: 'submit' | 'reset' | 'button' = 'button';
 }
