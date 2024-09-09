@@ -6,7 +6,7 @@ import { faFloppyDisk, faPlus, faRotateRight, faTrash } from '@fortawesome/free-
 import { schemaData } from '../schema';
 import { NegativeButtonComponent } from './atoms/negative-button.component';
 import { NeutralButtonComponent } from './atoms/neutral-button.component';
-import { PositiveLinkButtonComponent } from './atoms/positive-link-button.component';
+import { PositiveButtonDirective } from './atoms/positive-button.directive';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ import { PositiveLinkButtonComponent } from './atoms/positive-link-button.compon
     NegativeButtonComponent,
     NeutralButtonComponent,
     ReactiveFormsModule,
-    PositiveLinkButtonComponent,
+    PositiveButtonDirective,
   ],
   template: `
     <nav class="pure-menu pure-menu-scrollable">
@@ -32,9 +32,9 @@ import { PositiveLinkButtonComponent } from './atoms/positive-link-button.compon
         <label for="meta-title">タイトル</label>
         <input type="text" id="meta-title" class="pure-input-1" />
 
-        <app-positive-link-button>
+        <a appPositiveButton>
           <fa-icon [icon]="faFloppyDisk" />新規作成
-        </app-positive-link-button>
+        </a>
       </form>
       <hr />
       <ul class="pure-menu-list">
