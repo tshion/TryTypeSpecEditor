@@ -4,8 +4,8 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { schemaData } from '../schema';
-import { NegativeButtonComponent } from './atoms/negative-button.component';
-import { NeutralButtonComponent } from './atoms/neutral-button.component';
+import { NegativeButtonDirective } from './atoms/negative-button.directive';
+import { NeutralButtonDirective } from './atoms/neutral-button.directive';
 import { PositiveButtonDirective } from './atoms/positive-button.directive';
 
 @Component({
@@ -14,8 +14,8 @@ import { PositiveButtonDirective } from './atoms/positive-button.directive';
   imports: [
     CommonModule,
     FontAwesomeModule,
-    NegativeButtonComponent,
-    NeutralButtonComponent,
+    NegativeButtonDirective,
+    NeutralButtonDirective,
     ReactiveFormsModule,
     PositiveButtonDirective,
   ],
@@ -56,16 +56,16 @@ import { PositiveButtonDirective } from './atoms/positive-button.directive';
                 <h3>{{ item.key }}</h3>
                 <p>{{ item.label }}</p>
                 @if (item.isArray) {
-                  <app-neutral-button>
+                  <button appNeutralButton type="button">
                     <fa-icon [icon]="faPlus" />入力欄追加
-                  </app-neutral-button>
+                  </button>
                 }
                 <!--
                 @if (hasChange(item)) {
                 -->
-                  <app-neutral-button>
+                  <button appNeutralButton type="button">
                     <fa-icon [icon]="faRotateRight" />既定に戻す
-                  </app-neutral-button>
+                  </button>
                 <!--
                   <span style="color: red;">※変更中</span>
                 }
@@ -74,9 +74,9 @@ import { PositiveButtonDirective } from './atoms/positive-button.directive';
               <div *ngFor="let _ of getControls(item.key).controls; let i = index" class="pure-control-group">
                 <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i" class="pure-input-3-4" [pattern]="item.pattern ?? ''" />
                 @if (item.isArray) {
-                  <app-negative-button>
+                  <button appNegativeButton type="button" (click)="a()">
                     <fa-icon [icon]="faTrash" />入力欄削除
-                  </app-negative-button>
+                  </button>
                 }
               </div>
             </div>
@@ -143,5 +143,9 @@ export class AppComponent implements OnInit {
 
   public getControls(key: string) {
     return this.form.controls[key] as FormArray;
+  }
+
+  public a() {
+    alert();
   }
 }

@@ -2,19 +2,19 @@ import { Directive, ElementRef } from '@angular/core';
 import { ButtonBase } from './button-base';
 
 /**
- * 肯定的な文脈で使うボタン
+ * 否定的な文脈で使うボタン
  *
  * @example
  * ``` html
- * <a appPositiveButton href="#">Link Text</a>
- * <button appPositiveButton>Button Text</button>
+ * <a appNegativeButton href="#">Link Text</a>
+ * <button appNegativeButton>Button Text</button>
  * ```
  */
 @Directive({
-  selector: '[appPositiveButton]',
+  selector: '[appNegativeButton]',
   standalone: true,
 })
-export class PositiveButtonDirective extends ButtonBase {
+export class NegativeButtonDirective extends ButtonBase {
 
   constructor(
     elementRef: ElementRef,
@@ -23,7 +23,7 @@ export class PositiveButtonDirective extends ButtonBase {
 
     const dom = this.dom;
     if (dom) {
-      dom.style.backgroundColor = '#0078e7';
+      dom.style.backgroundColor = '#ca3c3c';
       dom.style.color = '#ffffff';
     }
   }
