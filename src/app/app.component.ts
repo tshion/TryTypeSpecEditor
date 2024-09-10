@@ -72,9 +72,40 @@ import { PositiveButtonDirective } from './atoms/positive-button.directive';
                 -->
               </hgroup>
               <div *ngFor="let _ of getControls(item.key).controls; let i = index" class="pure-control-group">
-                <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i" class="pure-input-3-4" [pattern]="item.pattern ?? ''" />
+                @switch (item.inputType) {
+                  @case ('checkbox') {
+                    <label for="{{ item.key }}-{{ i }}" class="pure-checkbox">
+                      <input type="checkbox" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
+                    </label>
+                  }
+                  @case ('color') {
+                    <input type="color" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
+                    <span class="pure-form-message-inline">{{ getControls(item.key).controls[i].getRawValue() }}</span>
+                  }
+                  @case ('number') {
+                    <input type="number" [formControlName]="i"
+                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                      [min]="item.min ?? null" [max]="item.max ?? null" [step]="item.step" />
+                  }
+                  @case ('select') {
+                    <select id="{{ item.key }}-{{ i }}" [formControlName]="i">
+                      @for (opt of item.options; track opt) {
+                        <option [value]="opt">{{ opt }}</option>
+                      }
+                    </select>
+                  }
+                  @case ('textbox') {
+                    <input type="text" [formControlName]="i"
+                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                      [pattern]="item.pattern ?? ''" />
+                  }
+                  @case ('url') {
+                    <input type="url" [formControlName]="i"
+                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4" />
+                  }
+                }
                 @if (item.isArray) {
-                  <button appNegativeButton type="button" (click)="a()">
+                  <button appNegativeButton type="button">
                     <fa-icon [icon]="faTrash" />入力欄削除
                   </button>
                 }
@@ -143,9 +174,5 @@ export class AppComponent implements OnInit {
 
   public getControls(key: string) {
     return this.form.controls[key] as FormArray;
-  }
-
-  public a() {
-    alert();
   }
 }
