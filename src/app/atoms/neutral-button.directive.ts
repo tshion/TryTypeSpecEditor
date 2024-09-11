@@ -1,5 +1,5 @@
 import { Directive, ElementRef } from '@angular/core';
-import { ButtonBase } from './button-base';
+import { ButtonBaseDirective } from './button-base.directive';
 
 /**
  * 中立的な文脈で使うボタン
@@ -14,7 +14,7 @@ import { ButtonBase } from './button-base';
   selector: '[appNeutralButton]',
   standalone: true,
 })
-export class NeutralButtonDirective extends ButtonBase {
+export class NeutralButtonDirective extends ButtonBaseDirective {
 
   constructor(
     elementRef: ElementRef,

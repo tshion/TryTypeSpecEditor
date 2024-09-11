@@ -1,9 +1,25 @@
-import { ElementRef } from "@angular/core";
+import { ElementRef } from '@angular/core';
 
 /**
  * ボタンの基礎実装
+ *
+ * @example
+ * ``` typescript
+ * export class ???Directive extends ButtonBaseDirective {
+ *   // your code
+ *   constructor(
+ *     // your code
+ *     elementRef: ElementRef,
+ *     // your code
+ *   ) {
+ *     super(elementRef);
+ *     // your code
+ *   }
+ *   // your code
+ * }
+ * ```
  */
-export abstract class ButtonBase {
+export abstract class ButtonBaseDirective {
 
   protected readonly dom: HTMLElement | null;
 

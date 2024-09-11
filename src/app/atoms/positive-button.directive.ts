@@ -1,5 +1,5 @@
 import { Directive, ElementRef } from '@angular/core';
-import { ButtonBase } from './button-base';
+import { ButtonBaseDirective } from './button-base.directive';
 
 /**
  * 肯定的な文脈で使うボタン
@@ -14,7 +14,7 @@ import { ButtonBase } from './button-base';
   selector: '[appPositiveButton]',
   standalone: true,
 })
-export class PositiveButtonDirective extends ButtonBase {
+export class PositiveButtonDirective extends ButtonBaseDirective {
 
   constructor(
     elementRef: ElementRef,
