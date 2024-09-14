@@ -87,8 +87,8 @@ import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.direc
           </div>
         }
       }
-    </form>`,
-  styles: ``
+    </form>
+  `,
 })
 export class PropertyFormComponent {
 
