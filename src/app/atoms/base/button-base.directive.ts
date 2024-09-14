@@ -7,6 +7,12 @@ import { ElementRef } from '@angular/core';
  * ``` typescript
  * export class ???Directive extends ButtonBaseDirective {
  *   // your code
+ *   @Input()
+ *   public set ???(enabled: boolean) {
+ *     this.enabled = enabled;
+ *   }
+ *
+ *   // your code
  *   constructor(
  *     // your code
  *     elementRef: ElementRef,
@@ -27,18 +33,11 @@ export abstract class ButtonBaseDirective {
   constructor(
     elementRef: ElementRef,
   ) {
-    const ref = elementRef.nativeElement;
-    switch (ref.tagName) {
-      case 'A': {
-        const dom = ref as HTMLAnchorElement;
-        if (!dom.href) {
-          dom.classList.add('pure-button-disabled');
-        }
-        this.dom = dom;
-        break;
-      }
+    const dom = elementRef.nativeElement as HTMLElement;
+    switch (dom.tagName) {
+      case 'A':
       case 'BUTTON': {
-        const dom = ref as HTMLButtonElement;
+        dom.classList.add('pure-button');
         this.dom = dom;
         break;
       }
@@ -46,7 +45,19 @@ export abstract class ButtonBaseDirective {
         this.dom = null;
         break;
     }
+  }
 
-    this.dom?.classList.add('pure-button');
+
+  /** 有効かどうか */
+  protected set enabled(value: boolean) {
+    const dom = this.dom;
+    if (!dom) { return; }
+
+    const className = 'pure-button-disabled';
+    if (value) {
+      dom.classList.remove(className);
+    } else {
+      dom.classList.add(className);
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Directive, ElementRef } from '@angular/core';
-import { ButtonBaseDirective } from './button-base.directive';
+import { ButtonBaseDirective } from './base/button-base.directive';
 
 /**
  * 否定的な文脈で使うボタン
