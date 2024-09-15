@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
@@ -11,12 +11,16 @@ import { TargetBlankDirective } from '../target-blank.directive';
 
 /**
  * サイドメニュー
+ *
+ * * 以前に保存したファイルから入力内容を復元
+ * * 入力内容のファイル保存
  */
 @Component({
   selector: 'app-side-menu',
   standalone: true,
   imports: [
     FontAwesomeModule,
+    FormsModule,
     PositivLinkeButtonDirective,
     TargetBlankDirective,
   ],
@@ -28,36 +32,48 @@ import { TargetBlankDirective } from '../target-blank.directive';
       </hgroup>
       <hr />
       <form class="pure-form pure-form-stacked">
-        <input type="file" accept="application/json" class="pure-input-1" />
+        <label for="meta-file">以前に保存したファイルの読み込み</label>
+        <input type="file" id="meta-file" name="meta-file"
+          accept="application/json" (change)="fileChanged($event)" />
+
+        <hr />
 
         <label for="meta-title">タイトル</label>
-        <input type="text" id="meta-title" class="pure-input-1" (change)="fileChanged($event)" />
+        <input type="text" id="meta-title" name="meta-title" class="pure-input-1"
+          required="" [(ngModel)]="metaTitle" />
 
-        <a [appPositiveLinkButton]="downloadUrl" download="sample.json">
-          <fa-icon [icon]="faFloppyDisk" />新規作成
+        <a class="pure-input-1" download="sample.json" [appPositiveLinkButton]="downloadUrl">
+          <fa-icon [icon]="faFloppyDisk" />ファイル保存
         </a>
       </form>
       <hr />
       <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-          <a href="https://www.google.com/maps" class="pure-menu-link" target="_blank">
-            Google Map <fa-icon [icon]="faUpRightFromSquare" />
-          </a>
-        </li>
+        @for (link of links; track link) {
+          <li class="pure-menu-item">
+            <a class="pure-menu-link" target="_blank" [href]="link.url">
+              {{ link.title }}<fa-icon [icon]="faUpRightFromSquare" />
+            </a>
+          </li>
+        }
       </ul>
     </nav>
   `,
   styles: [
-    `:host {
-      height: inherit;
+    `fa-icon {
+      margin-left: 4px;
+      margin-right: 4px;
     }`,
     `nav {
       background-color: var(--app-color-main);
       color:  var(--app-color-main-on);
-      height: inherit;
+      height: 100vh;
+      width: 360px;
+    }`,
+    `nav.pure-menu-scrollable {
+      overflow-y: auto;
     }`,
     `nav > form {
-      padding: 8px 16px;
+      padding: 8px;
     }`,
     `nav > hgroup {
       padding: 16px;
@@ -78,6 +94,23 @@ export class SideMenuComponent implements OnInit {
   @Input()
   public formGroup!: FormGroup;
 
+  /** 関連するリンク一覧 */
+  protected readonly links = [
+    { title: 'Google Map', url: 'https://www.google.com/maps' },
+  ];
+
+  /** タイトル */
+  private _metaTitle = '';
+
+  protected get metaTitle() {
+    return this._metaTitle;
+  }
+
+  protected set metaTitle(value: string) {
+    this._metaTitle = value;
+    this.updateDownloadUrl();
+  }
+
   protected readonly schemaData = schemaData;
 
 
@@ -85,8 +118,6 @@ export class SideMenuComponent implements OnInit {
     this.formGroup.valueChanges.pipe(
       tap(() => this.updateDownloadUrl()),
     ).subscribe();
-
-    this.updateDownloadUrl();
   }
 
 
@@ -125,6 +156,12 @@ export class SideMenuComponent implements OnInit {
   }
 
   private updateDownloadUrl() {
+    const title = this._metaTitle;
+    if (!title) {
+      this.downloadUrl = null;
+      return;
+    }
+
     const rawValue: [string, any[]][] = this.formGroup.getRawValue();
     const saveData: any = {};
     for (const [k, v] of Object.entries(rawValue)) {
@@ -141,7 +178,7 @@ export class SideMenuComponent implements OnInit {
     }
 
     const obj: SaveFormatDto = {
-      title: '',
+      title: title,
       items: saveData,
     };
     const blob = new Blob(

@@ -23,11 +23,6 @@ import { SideMenuComponent } from './organisms/side-menu.component';
       display: flex;
       flex-direction: row;
     }`,
-    `app-side-menu {
-      height: 100vh;
-      overflow-y: auto;
-      width: 360px;
-    }`,
     `main {
       background-color: var(--app-color-base);
       color: var(--app-color-base-on);
