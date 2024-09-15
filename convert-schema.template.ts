@@ -13,6 +13,9 @@ export const InputType = {
 /** 入力形式の型エイリアス */
 export type InputType = typeof InputType[keyof typeof InputType];
 
+/** 入力欄に設定できる型 */
+export type InputValueType = string | number | boolean;
+
 /**
  * 入力項目の書式
  */
@@ -31,7 +34,7 @@ export interface InputSchemaDto {
   label: string;
 
   /** (デフォルトの)入力値 */
-  value: (boolean | number | string)[];
+  value: InputValueType[];
 
 
   /** 数値入力できる最高値 */
@@ -41,7 +44,7 @@ export interface InputSchemaDto {
   min?: number;
 
   /** 選択肢 */
-  options?: (number | string)[];
+  options?: InputValueType[];
 
   /** 許可する入力パターンの正規表現 */
   pattern?: string;

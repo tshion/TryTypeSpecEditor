@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { InputSchemaDto, schemaData } from '../../schema';
+import { schemaData } from '../../schema';
 import { NegativeButtonDirective } from '../atoms/negative-button.directive';
 import { NeutralButtonDirective } from '../atoms/neutral-button.directive';
 import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
+import { PropertyFormService } from '../services/property-form.service';
 
 /**
  * 各項目の入力フォーム
@@ -35,17 +36,17 @@ import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.direc
               <h3>{{ item.key }}</h3>
               <p>{{ item.label }}</p>
               @if (item.isArray) {
-                <button appNeutralButton type="button" (click)="addControl(item)">
+                <button appNeutralButton type="button" (click)="formService.addControl(formGroup, item)">
                   <fa-icon [icon]="faPlus" />入力欄追加
                 </button>
               }
-              @if (hasChange(item)) {
-                <button appNeutralButton type="button" (click)="resetControl(item)">
+              @if (formService.hasChange(formGroup, item)) {
+                <button appNeutralButton type="button" (click)="formService.resetControl(formGroup, item)">
                   <fa-icon [icon]="faRotateRight" />既定に戻す
                 </button>
               }
             </hgroup>
-            <div *ngFor="let _ of getControl(item.key).controls; let i = index" class="pure-control-group">
+            <div *ngFor="let _ of formService.getControl(formGroup, item.key).controls; let i = index" class="pure-control-group">
               @switch (item.inputType) {
                 @case ('checkbox') {
                   <label for="{{ item.key }}-{{ i }}" class="pure-checkbox">
@@ -54,7 +55,7 @@ import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.direc
                 }
                 @case ('color') {
                   <input type="color" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
-                  <span class="pure-form-message-inline">{{ getControl(item.key).controls[i].getRawValue() }}</span>
+                  <span class="pure-form-message-inline">{{ formService.getControl(formGroup, item.key).controls[i].getRawValue() }}</span>
                 }
                 @case ('number') {
                   <input type="number" [formControlName]="i"
@@ -79,7 +80,7 @@ import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.direc
                 }
               }
               @if (item.isArray) {
-                <button appNegativeButton type="button" (click)="removeControl(item.key, i)">
+                <button appNegativeButton type="button" (click)="formService.removeControl(formGroup, item.key, i)">
                   <fa-icon [icon]="faTrash" />入力欄削除
                 </button>
               }
@@ -104,55 +105,8 @@ export class PropertyFormComponent {
   protected readonly schemaData = schemaData;
 
 
-  protected addControl(schema: InputSchemaDto, value?: unknown) {
-    let v = value;
-    if (!value) {
-      switch (schema.inputType) {
-        case 'checkbox':
-          v = false;
-          break;
-        case 'color':
-          v = '#FFFFFF'
-          break;
-        case 'number':
-          v = 0;
-          break
-        case 'select':
-          v = schema.options?.[0];
-          break;
-        case 'textbox':
-        case 'url':
-          v = '';
-          break;
-      }
-    }
-    this.getControl(schema.key).push(new FormControl(v));
-  }
-
-  protected getControl(key: string) {
-    return this.formGroup.controls[key] as FormArray;
-  }
-
-  protected hasChange(schema: InputSchemaDto) {
-    const input = this.getControl(schema.key).getRawValue();
-    let hasChanged = input.length !== schema.value.length;
-    if (!hasChanged) {
-      for (let i = 0; i < schema.value.length; i++) {
-        if (input[i] != schema.value[i]) {
-          hasChanged = true;
-          break;
-        }
-      }
-    }
-    return hasChanged;
-  }
-
-  protected removeControl(key: string, index: number) {
-    this.getControl(key).removeAt(index);
-  }
-
-  protected resetControl(schema: InputSchemaDto) {
-    this.getControl(schema.key).clear();
-    schema.value.forEach(x => this.addControl(schema, x));
+  constructor(
+    protected readonly formService: PropertyFormService,
+  ) {
   }
 }

@@ -6,7 +6,8 @@ import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-i
 import { tap } from 'rxjs';
 import { schemaData } from '../../schema';
 import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
-import { SaveFormatDto } from '../save-format.dto';
+import { PropertyFormService } from '../services/property-form.service';
+import { SaveFormatDto } from '../services/save-format.dto';
 import { TargetBlankDirective } from '../target-blank.directive';
 
 /**
@@ -114,6 +115,12 @@ export class SideMenuComponent implements OnInit {
   protected readonly schemaData = schemaData;
 
 
+  constructor(
+    private readonly formService: PropertyFormService,
+  ) {
+  }
+
+
   ngOnInit(): void {
     this.formGroup.valueChanges.pipe(
       tap(() => this.updateDownloadUrl()),
@@ -130,59 +137,27 @@ export class SideMenuComponent implements OnInit {
 
     const reader = new FileReader();
     reader.addEventListener('load', () => {
-      if (file?.type !== 'application/json') {
-        return;
-      }
+      if (file?.type !== 'application/json') { return; }
 
       const result = reader.result;
-      if (!result) {
-        return;
-      }
+      if (!result) { return; }
 
-      // const data: [string, any][] = JSON.parse(result.toString());
-      // Object.entries(data).forEach(([k, v]) => {
-      //     const s = this.schemas?.find(x => x.key === k);
-      //     if (s) {
-      //         this.getControls(s).clear();
-      //         if (s.isArray) {
-      //             v.forEach(x => this.addControl(s, x));
-      //         } else {
-      //             this.addControl(s, v);
-      //         }
-      //     }
-      // });
+      const data: SaveFormatDto = JSON.parse(result.toString());
+      this._metaTitle = data.title;
+      this.formService.restore(this.formGroup, data.items);
     }, false);
     reader.readAsText(file, 'UTF-8');
   }
 
   private updateDownloadUrl() {
-    const title = this._metaTitle;
-    if (!title) {
+    const saveData = this.formService.toSaveFormat(this.formGroup, this._metaTitle);
+    if (!saveData) {
       this.downloadUrl = null;
       return;
     }
 
-    const rawValue: [string, any[]][] = this.formGroup.getRawValue();
-    const saveData: any = {};
-    for (const [k, v] of Object.entries(rawValue)) {
-      const target = this.schemaData.groups.flatMap(x => x.items).find(x => x.key === k);
-      if (!target) {
-        continue;
-      }
-
-      // FIXME: 無効な値の取り扱い
-      // FIXME: 型の調整
-      saveData[k] = target.isArray
-        ? v.filter(x => !!x)
-        : v[0];
-    }
-
-    const obj: SaveFormatDto = {
-      title: title,
-      items: saveData,
-    };
     const blob = new Blob(
-      [JSON.stringify(obj, null, 4)],
+      [JSON.stringify(saveData, null, 4)],
       { type: 'application/json' },
     );
     this.downloadUrl = window.URL.createObjectURL(blob);

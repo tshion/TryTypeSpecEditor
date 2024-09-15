@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { schemaData } from '../schema';
+import { FormGroup } from '@angular/forms';
 import { PropertyFormComponent } from './organisms/property-form.component';
 import { SideMenuComponent } from './organisms/side-menu.component';
+import { PropertyFormService } from './services/property-form.service';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +12,9 @@ import { SideMenuComponent } from './organisms/side-menu.component';
     SideMenuComponent,
   ],
   template: `
-    <app-side-menu [formGroup]="form" />
+    <app-side-menu [formGroup]="propertyForm" />
     <main>
-      <app-property-form [formGroup]="form" />
+      <app-property-form [formGroup]="propertyForm" />
     </main>
   `,
   styles: [
@@ -35,15 +34,16 @@ import { SideMenuComponent } from './organisms/side-menu.component';
 })
 export class AppComponent implements OnInit {
 
-  protected form!: FormGroup;
+  protected propertyForm!: FormGroup;
+
+
+  constructor(
+    private readonly propertyFormService: PropertyFormService,
+  ) {
+  }
 
 
   ngOnInit(): void {
-    const controls: any = {};
-    schemaData.groups.flatMap(group => group.items).forEach(item => {
-      const children = item.value.map(value => new FormControl(value));
-      controls[item.key] = new FormArray(children);
-    });
-    this.form = new FormGroup(controls);
+    this.propertyForm = this.propertyFormService.toFormGroup();
   }
 }
