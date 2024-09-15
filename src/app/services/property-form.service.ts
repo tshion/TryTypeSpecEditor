@@ -90,6 +90,7 @@ export class PropertyFormService {
   public toFormGroup() {
     const controls: Record<string, FormArray> = {};
     this.schemaItems.forEach(schema => {
+      // FIXME: 検証ルールの設定
       const children = schema.value.map(value => new FormControl(value));
       controls[schema.key] = new FormArray(children);
     });
@@ -109,14 +110,20 @@ export class PropertyFormService {
         switch (schema.inputType) {
           case 'checkbox':
             return !!x;
-          case 'color':
-          case 'textbox':
-          case 'url':
-            return `${x}`;
           case 'number':
             return Number(x);
-          case 'select':
-            return x; // FIXME: 型情報の追加
+          case 'select': {
+            switch (typeof schema.options?.[0]) {
+              case 'boolean':
+                return !!x;
+              case 'number':
+                return Number(x);
+              default:
+                return x;
+            }
+          }
+          default:
+            return x;
         }
       });
       data[k] = schema.isArray ? values : values[0];
