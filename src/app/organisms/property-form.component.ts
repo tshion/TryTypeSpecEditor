@@ -47,7 +47,7 @@ import { PropertyFormService } from '../services/property-form.service';
               }
             </hgroup>
             <div *ngFor="let _ of formService.getControl(formGroup, item.key).controls; let i = index" class="pure-control-group">
-              @switch (item.inputType) {
+              @switch (item.inputFormat) {
                 @case ('checkbox') {
                   <label for="{{ item.key }}-{{ i }}" class="pure-checkbox">
                     <input type="checkbox" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
@@ -57,19 +57,31 @@ import { PropertyFormService } from '../services/property-form.service';
                   <input type="color" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
                   <span class="pure-form-message-inline">{{ formService.getControl(formGroup, item.key).controls[i].getRawValue() }}</span>
                 }
+                @case ('double') {
+                  <input type="text" [formControlName]="i"
+                    id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                    pattern="^\\d+\\.\\d+$" />
+                }
                 @case ('number') {
                   <input type="number" [formControlName]="i"
                     id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
                     [min]="item.min ?? null" [max]="item.max ?? null" [step]="item.step" />
                 }
-                @case ('select') {
+                @case ('select_int') {
                   <select id="{{ item.key }}-{{ i }}" [formControlName]="i">
                     @for (opt of item.options; track opt) {
                       <option [value]="opt">{{ opt }}</option>
                     }
                   </select>
                 }
-                @case ('textbox') {
+                @case ('select_text') {
+                  <select id="{{ item.key }}-{{ i }}" [formControlName]="i">
+                    @for (opt of item.options; track opt) {
+                      <option [value]="opt">{{ opt }}</option>
+                    }
+                  </select>
+                }
+                @case ('text') {
                   <input type="text" [formControlName]="i"
                     id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
                     [pattern]="item.pattern ?? ''" />

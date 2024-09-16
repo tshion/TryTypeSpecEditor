@@ -21,25 +21,29 @@ export class PropertyFormService {
   ) {
     let v = value;
     if (v === undefined) {
-      switch (schema.inputType) {
+      switch (schema.inputFormat) {
         case 'checkbox':
           v = false;
           break;
         case 'color':
           v = '#888888'
           break;
+        case 'double':
+          v = '0.0';
+          break;
         case 'number':
           v = 0;
           break;
-        case 'select':
+        case 'select_int':
+        case 'select_text':
           v = schema.options?.[0];
           break;
-        case 'textbox':
+        case 'text':
         case 'url':
           v = '';
           break;
         default:
-          throw Error(`想定外の入力形式です: ${schema.key} -> ${schema.inputType}`);
+          throw Error(`想定外の入力形式です: ${schema.key} -> ${schema.inputFormat}`);
       }
     }
     // FIXME: 検証ルールの設定
@@ -107,21 +111,11 @@ export class PropertyFormService {
 
       // FIXME
       const values = v.map(x => {
-        switch (schema.inputType) {
-          case 'checkbox':
-            return !!x;
-          case 'number':
-            return Number(x);
-          case 'select': {
-            switch (typeof schema.options?.[0]) {
-              case 'boolean':
-                return !!x;
-              case 'number':
-                return Number(x);
-              default:
-                return x;
-            }
-          }
+        switch (schema.inputFormat) {
+          case 'double':
+            return parseFloat(`${x}`);
+          case 'select_int':
+            return parseInt(`${x}`);
           default:
             return x;
         }

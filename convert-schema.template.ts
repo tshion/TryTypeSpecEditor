@@ -1,30 +1,31 @@
 // 自動生成
 
-/** 入力形式 */
-export const InputType = {
+/** 入力欄の書式 */
+export const InputFormatType = {
   CHECKBOX: 'checkbox',
   COLOR: 'color',
+  DOUBLE: 'double',
   NUMBER: 'number',
-  SELECT: 'select',
-  TEXTBOX: 'textbox',
+  SELECT_INT: 'select_int',
+  SELECT_TEXT: 'select_text',
+  TEXT: 'text',
   URL: 'url',
 } as const;
+export type InputFormatType = typeof InputFormatType[keyof typeof InputFormatType];
 
-/** 入力形式の型エイリアス */
-export type InputType = typeof InputType[keyof typeof InputType];
-
-/** 入力欄に設定できる型 */
+/** 入力値の型 */
 export type InputValueType = string | number | boolean;
 
+
 /**
- * 入力項目の書式
+ * 各入力項目の定義
  */
 export interface InputSchemaDto {
 
-  /** 入力形式 */
-  inputType: InputType;
+  /** 入力欄の書式 */
+  inputFormat: InputFormatType;
 
-  /** 複数入力できるかどうか */
+  /** 複数の入力欄を編集できるかどうか */
   isArray: boolean;
 
   /** キー名 */
@@ -54,9 +55,9 @@ export interface InputSchemaDto {
 }
 
 /**
- * 入力の書式
+ * 編集項目の定義
  */
-export interface SchemaDto {
+export interface EditSchemaDto {
 
   /** 書式バージョン */
   version: string;
@@ -75,8 +76,9 @@ export interface SchemaDto {
   }[];
 }
 
-/** 入力の書式データ */
-export const schemaData: SchemaDto = {
+
+/** 編集項目のデータ */
+export const schemaData: EditSchemaDto = {
   version: '%%VERSION%%',
   groups: [/** Data */]
 };

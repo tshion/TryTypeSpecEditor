@@ -1,5 +1,5 @@
 # TryTypeSpecEditor
-試し書きしたTypeSpec を基に、編集UI を実装するリポジトリ。
+[TypeSpec] の試し書きリポジトリ https://github.com/tshion/TryTypeSpec を基に、その編集UI を実装するリポジトリ。
 
 
 
@@ -20,3 +20,22 @@
 ``` shell
 npx -p @angular/cli@18.2.2 ng new try-typespec-editor --minimal --package-manager npm --routing false --skip-git --skip-install --ssr false --standalone --style css
 ```
+
+### 入力形式の対応表
+TypeSpec<br />(`※` は独自型) | (code)<br />(`※` は独自型) | HTML 入力欄
+--- | --- | ---
+`argb` ※ | `TEXT` | `input:text` + `pattern:^#[\dA-F]{8}$`
+`boolean` | `CHECKBOX` | `input:checkbox`
+`float` | `DOUBLE` ※ | `input:text` + `pattern:^\d+\.\d+$`
+`integer` | `NUMBER` | `input:number` + ( `min` + `max` )
+`integer \| integer` | `SELECT_INT` ※ | `select` + `<option>int</option>`
+`latitude` ※ | `NUMBER` | `input:number` + `min:-90.0` + `max:90.0` + `step:0.000001`
+`longitude` ※ | `NUMBER` | `input:number` + `min:-180.0` + `max:180.0` + `step:0.000001`
+`rgb` ※ | `COLOR` | `input:color`
+`string` | `TEXT` | `input:text`
+`string \| string` | `SELECT_TEXT` ※ | `select` + `<option>text</option>`
+`url` | `URL` | `input:url`
+
+
+
+[TypeSpec]: https://typespec.io/

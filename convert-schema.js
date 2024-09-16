@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * JSON Schema から入力の書式データへ変換
+ * JSON Schema から編集項目データへ変換
  */
 +function (
   /** 書式バージョン @type{string} */
@@ -61,50 +61,54 @@ const path = require('path');
         value: isArray ? arrayDefaults[k] : [v['default']],
       };
       switch (type) {
-        case 'anyOf':
-          item['inputType'] = 'select';
-          item['options'] = (isArray ? v['items']['anyOf'] : v['anyOf'])
-            .map(x => x['const']);
+        case 'anyOf': {
+          const options = isArray ? v['items']['anyOf'] : v['anyOf'];
+          if(options[0]['type'] === 'number') {
+            item['inputFormat'] = 'select_int';
+          } else {
+            item['inputFormat'] = 'select_text';
+          }
+          item['options'] = options.map(x => x['const']);
           break;
+        }
         case 'boolean':
-          item['inputType'] = 'checkbox';
+          item['inputFormat'] = 'checkbox';
           break;
         case 'integer':
-          item['inputType'] = 'number';
+          item['inputFormat'] = 'number';
           item['min'] = v['minimum'];
           item['max'] = v['maximum'];
           break;
         case 'number':
-          item['inputType'] = 'textbox';
-          item['pattern'] = /^\d+\.\d+$/.source;
+          item['inputFormat'] = 'double';
           break;
         case 'string':
           switch (v['format']) {
             case 'uri':
-              item['inputType'] = 'url';
+              item['inputFormat'] = 'url';
               break;
             default:
-              item['inputType'] = 'textbox';
+              item['inputFormat'] = 'text';
           }
           break;
         case '#/$defs/argb':
-          item['inputType'] = 'textbox';
+          item['inputFormat'] = 'text';
           item['pattern'] = /^#[\dA-F]{8}$/.source;
           break;
         case '#/$defs/latitude':
-          item['inputType'] = 'number';
+          item['inputFormat'] = 'number';
           item['min'] = -90.0;
           item['max'] = 90.0;
           item['step'] = 0.000001;
           break;
         case '#/$defs/longitude':
-          item['inputType'] = 'number';
+          item['inputFormat'] = 'number';
           item['min'] = -180.0;
           item['max'] = 180.0;
           item['step'] = 0.000001;
           break;
         case '#/$defs/rgb':
-          item['inputType'] = 'color';
+          item['inputFormat'] = 'color';
           break;
         default:
           throw Error(`${k}: Undefined type!`);
