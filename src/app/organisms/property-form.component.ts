@@ -32,9 +32,11 @@ import { PropertyFormService } from '../services/property-form.service';
         </hgroup>
         @for (item of group.items; track item) {
           <div [formArrayName]="item.key">
-            <hgroup>
-              <h3>{{ item.key }}</h3>
-              <p>{{ item.label }}</p>
+            <header class="item-menu">
+              <hgroup>
+                <h3>{{ item.key }}</h3>
+                <p>{{ item.label }}</p>
+              </hgroup>
               @if (item.isArray) {
                 <button appNeutralButton type="button" (click)="formService.addControl(formGroup, item)">
                   <fa-icon [icon]="faPlus" />入力欄追加
@@ -45,7 +47,7 @@ import { PropertyFormService } from '../services/property-form.service';
                   <fa-icon [icon]="faRotateRight" />既定に戻す
                 </button>
               }
-            </hgroup>
+            </header>
             <div *ngFor="let _ of formService.getControl(formGroup, item.key).controls; let i = index" class="pure-control-group">
               @switch (item.inputFormat) {
                 @case ('checkbox') {
@@ -102,6 +104,16 @@ import { PropertyFormService } from '../services/property-form.service';
       }
     </form>
   `,
+  styles: [
+    `.item-menu {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+    }`,
+    `.item-menu > button {
+      margin: 0 8px;
+    }`,
+  ],
 })
 export class PropertyFormComponent {
 
