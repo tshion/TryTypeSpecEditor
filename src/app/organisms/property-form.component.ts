@@ -29,7 +29,7 @@ import { PropertyFormService } from '../services/property-form.service';
           <p>{{ group.description }}</p>
         </hgroup>
         @for (item of group.items; track item) {
-          <div [formArrayName]="item.key">
+          <div [formArrayName]="item.key" class="item">
             <header class="item-menu">
               <hgroup>
                 <h3>{{ item.key }}</h3>
@@ -48,6 +48,11 @@ import { PropertyFormService } from '../services/property-form.service';
             </header>
             @for (_ of formService.getControl(formGroup, item.key).controls; track $index; let i = $index) {
               <div class="pure-control-group">
+                @if (item.isArray) {
+                  <button appNegativeButton type="button" (click)="formService.removeControl(formGroup, item.key, i)">
+                    <fa-icon [icon]="faTrash" />入力欄削除
+                  </button>
+                }
                 @switch (item.inputFormat) {
                   @case ('checkbox') {
                     <label for="{{ item.key }}-{{ i }}" class="pure-checkbox">
@@ -59,13 +64,11 @@ import { PropertyFormService } from '../services/property-form.service';
                     <span class="pure-form-message-inline">{{ formService.getControl(formGroup, item.key).controls[i].getRawValue() }}</span>
                   }
                   @case ('double') {
-                    <input type="text" [formControlName]="i"
-                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                    <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i"
                       pattern="^\\d+\\.\\d+$" />
                   }
                   @case ('number') {
-                    <input type="number" [formControlName]="i"
-                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                    <input type="number" id="{{ item.key }}-{{ i }}" [formControlName]="i"
                       [min]="item.min ?? null" [max]="item.max ?? null" [step]="item.step" />
                   }
                   @case ('select_int') {
@@ -83,19 +86,12 @@ import { PropertyFormService } from '../services/property-form.service';
                     </select>
                   }
                   @case ('text') {
-                    <input type="text" [formControlName]="i"
-                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4"
+                    <input type="text" id="{{ item.key }}-{{ i }}" [formControlName]="i"
                       [pattern]="item.pattern ?? ''" />
                   }
                   @case ('url') {
-                    <input type="url" [formControlName]="i"
-                      id="{{ item.key }}-{{ i }}" class="pure-input-3-4" />
+                    <input type="url" id="{{ item.key }}-{{ i }}" [formControlName]="i" />
                   }
-                }
-                @if (item.isArray) {
-                  <button appNegativeButton type="button" (click)="formService.removeControl(formGroup, item.key, i)">
-                    <fa-icon [icon]="faTrash" />入力欄削除
-                  </button>
                 }
               </div>
             }
@@ -105,6 +101,20 @@ import { PropertyFormService } from '../services/property-form.service';
     </form>
   `,
   styles: [
+    `.item {
+      margin: 16px 0;
+    }`,
+    `.item > .pure-control-group {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+    }`,
+    `.item > .pure-control-group input {
+      flex-grow: 1;
+    }`,
+    `.item > .pure-control-group select {
+      flex-grow: 1;
+    }`,
     `.item-menu {
       align-items: center;
       display: flex;
