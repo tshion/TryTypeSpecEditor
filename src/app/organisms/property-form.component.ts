@@ -31,15 +31,15 @@ import { PropertyFormService } from '../services/property-form.service';
         @for (item of group.items; track item) {
           <div [formArrayName]="item.key" class="item">
             <header class="item-menu">
-              <hgroup>
-                <h3>{{ item.key }}</h3>
-                <p>{{ item.label }}</p>
-              </hgroup>
               @if (item.isArray) {
                 <button appNeutralButton type="button" (click)="formService.addControl(formGroup, item)">
                   <fa-icon [icon]="faPlus" />入力欄追加
                 </button>
               }
+              <hgroup>
+                <h3>{{ item.key }}</h3>
+                <p>{{ item.label }}</p>
+              </hgroup>
               @if (formService.hasChange(formGroup, item)) {
                 <button appNeutralButton type="button" (click)="formService.resetControl(formGroup, item)">
                   <fa-icon [icon]="faRotateRight" />既定に戻す
