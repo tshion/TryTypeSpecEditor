@@ -6,8 +6,8 @@ import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-i
 import { tap } from 'rxjs';
 import { schemaData } from '../../schema';
 import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
-import { PropertyFormService } from '../services/property-form.service';
 import { SaveFormatDto } from '../services/save-format.dto';
+import { SchemaFormService } from '../services/schema-form.service';
 import { TargetBlankDirective } from '../target-blank.directive';
 
 /**
@@ -35,7 +35,7 @@ import { TargetBlankDirective } from '../target-blank.directive';
       <form class="pure-form pure-form-stacked">
         <label for="meta-file">以前に保存したファイルの読み込み</label>
         <input type="file" id="meta-file" name="meta-file"
-          accept="application/json" (change)="fileChanged($event)" />
+          accept="application/json" (change)="onFileChanged($event)" />
 
         <hr />
 
@@ -116,7 +116,7 @@ export class SideMenuComponent implements OnInit {
 
 
   constructor(
-    private readonly formService: PropertyFormService,
+    private readonly formService: SchemaFormService,
   ) {
   }
 
@@ -128,7 +128,7 @@ export class SideMenuComponent implements OnInit {
   }
 
 
-  protected fileChanged(event: Event) {
+  protected onFileChanged(event: Event) {
     const dom = event.target as HTMLInputElement;
     const file = dom?.['files']?.[0];
     if (file?.type !== 'application/json') {

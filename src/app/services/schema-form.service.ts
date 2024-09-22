@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { InputSchemaDto, InputValueType, schemaData } from '../../schema';
+import { SaveFormatDto } from './save-format.dto';
 
 /**
  * 編集項目データを司るForm モデルの操作サービス
@@ -98,5 +99,52 @@ export class SchemaFormService {
     const target = this.getFormArray(base, schema);
     target.clear();
     target.controls = children;
+  }
+
+  /** 与えられたデータのFormGroup を復元する */
+  public restore(base: FormGroup, items: Record<string, InputValueType | InputValueType[]>) {
+    for (const [k, v] of Object.entries(items)) {
+      const schema = this.schemaItems.find(x => x.key === k);
+      if (schema === undefined) { continue; }
+
+      const values = schema.isArray
+        ? (v as InputValueType[])
+        : [(v as InputValueType)];
+      const controls = values.map(value => this.newFormControl(schema, value));
+
+      const target = this.getFormArray(base, schema);
+      target.clear();
+      controls.forEach(control => target.push(control));
+    }
+  }
+
+  /** 保存データへ変換 */
+  public toSaveFormat(base: FormGroup, title: string) {
+    if (!base.valid || !title) { return; }
+
+    const data: Record<string, InputValueType | InputValueType[]> = {};
+    for (const [k, v] of Object.entries<InputValueType[]>(base.getRawValue())) {
+      const schema = this.schemaItems.find(x => x.key === k);
+      if (schema === undefined) { continue; }
+
+      // FIXME: 適切な値変換
+      const values = v.map(x => {
+        switch (schema.inputFormat) {
+          case 'double':
+            return parseFloat(`${x}`);
+          case 'select_int':
+            return parseInt(`${x}`);
+          default:
+            return x;
+        }
+      });
+      data[k] = schema.isArray ? values : values[0];
+    }
+
+    const result: SaveFormatDto = {
+      title: title,
+      items: data,
+    };
+    return result;
   }
 }
