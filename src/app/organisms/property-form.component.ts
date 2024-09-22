@@ -64,13 +64,17 @@ import { SchemaFormService } from '../services/schema-form.service';
                   <input type="color" [formControlName]="i" [id]="formService.getFormControlId(item, i)" />
                   <span class="pure-form-message-inline">{{ control.getRawValue() }}</span>
                 }
+                @case ('color_alpha') {
+                  <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
+                    [maxLength]="9" [pattern]="item.pattern!" required="" />
+                }
                 @case ('double') {
                   <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    pattern="^\\d+\\.\\d+$" />
+                    inputmode="numeric" [pattern]="item.pattern!" required="" />
                 }
                 @case ('number') {
                   <input type="number" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    [min]="item.min ?? null" [max]="item.max ?? null" [step]="item.step" />
+                    [min]="item.min ?? null" [max]="item.max ?? null" required="" [step]="item.step" />
                 }
                 @case ('select_int') {
                   <select [formControlName]="i" [id]="formService.getFormControlId(item, i)">
@@ -88,10 +92,11 @@ import { SchemaFormService } from '../services/schema-form.service';
                 }
                 @case ('text') {
                   <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    [pattern]="item.pattern ?? ''" />
+                    [pattern]="item.pattern ?? ''" [required]="item.isArray" />
                 }
                 @case ('url') {
-                  <input type="url" [formControlName]="i"  [id]="formService.getFormControlId(item, i)" />
+                  <input type="url" [formControlName]="i"  [id]="formService.getFormControlId(item, i)"
+                    [required]="item.isArray" />
                 }
               }
               </div>

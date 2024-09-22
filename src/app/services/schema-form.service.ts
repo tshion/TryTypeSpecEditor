@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { InputSchemaDto, InputValueType, schemaData } from '../../schema';
 import { SaveFormatDto } from './save-format.dto';
 
@@ -47,35 +47,60 @@ export class SchemaFormService {
 
   /** FormControl インスタンスの新規作成 */
   private newFormControl(schema: InputSchemaDto, value?: InputValueType) {
-    let v = value;
-    if (v === undefined) {
-      switch (schema.inputFormat) {
-        case 'checkbox':
-          v = false;
-          break;
-        case 'color':
-          v = '#888888'
-          break;
-        case 'double':
-          v = '0.0';
-          break;
-        case 'number':
-          v = 0;
-          break;
-        case 'select_int':
-        case 'select_text':
-          v = schema.options?.[0];
-          break;
-        case 'text':
-        case 'url':
-          v = '';
-          break;
-        default:
-          throw Error(`想定外の入力形式です: ${schema.key} -> ${schema.inputFormat}`);
+    switch (schema.inputFormat) {
+      case 'checkbox':
+        return new FormControl(value !== undefined ? value : false);
+      case 'color':
+        return new FormControl(value !== undefined ? value : '#888888');
+      case 'color_alpha': {
+        const rules = [];
+        if (schema.pattern !== undefined) {
+          rules.push(Validators.pattern(schema.pattern));
+        }
+        rules.push(Validators.required);
+        return new FormControl(value !== undefined ? value : '', rules);
       }
+      case 'double': {
+        const rules = [];
+        if (schema.pattern !== undefined) {
+          rules.push(Validators.pattern(schema.pattern));
+        }
+        rules.push(Validators.required);
+        return new FormControl(value !== undefined ? value : '0.0', rules);
+      }
+      case 'number': {
+        const rules = [];
+        if (schema.min !== undefined) {
+          rules.push(Validators.min(schema.min));
+        }
+        if (schema.max !== undefined) {
+          rules.push(Validators.max(schema.max));
+        }
+        return new FormControl(value !== undefined ? value : 0, rules);
+      }
+      case 'select_int':
+      case 'select_text':
+        return new FormControl(value !== undefined ? value : schema.options?.[0]);
+      case 'text': {
+        const rules = [];
+        if (schema.isArray) {
+          rules.push(Validators.required);
+        }
+        if (schema.pattern !== undefined) {
+          rules.push(Validators.pattern(schema.pattern));
+        }
+        return new FormControl(value !== undefined ? value : '', rules);
+      }
+      case 'url': {
+        const rules = [];
+        if (schema.isArray) {
+          rules.push(Validators.required);
+        }
+        return new FormControl(value !== undefined ? value : '', rules);
+      }
+      default:
+        throw Error(`想定外の入力形式です: ${schema.key} -> ${schema.inputFormat}`);
     }
-    // FIXME: 検証ルールの設定
-    return new FormControl(v);
   }
 
   /** FormGroup の新規作成 */

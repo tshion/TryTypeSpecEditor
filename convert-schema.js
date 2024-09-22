@@ -81,6 +81,7 @@ const path = require('path');
           break;
         case 'number':
           item['inputFormat'] = 'double';
+          item['pattern'] = /^\d+\.\d+$/.source;
           break;
         case 'string':
           switch (v['format']) {
@@ -92,7 +93,7 @@ const path = require('path');
           }
           break;
         case '#/$defs/argb':
-          item['inputFormat'] = 'text';
+          item['inputFormat'] = 'color_alpha';
           item['pattern'] = /^#[\dA-F]{8}$/.source;
           break;
         case '#/$defs/latitude':

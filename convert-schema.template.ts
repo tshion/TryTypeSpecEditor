@@ -4,6 +4,7 @@
 export const InputFormatType = {
   CHECKBOX: 'checkbox',
   COLOR: 'color',
+  COLOR_ALPHA: 'color_alpha',
   DOUBLE: 'double',
   NUMBER: 'number',
   SELECT_INT: 'select_int',
