@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PropertyFormComponent } from './organisms/property-form.component';
 import { SideMenuComponent } from './organisms/side-menu.component';
-import { PropertyFormService } from './services/property-form.service';
+import { SchemaFormService } from './services/schema-form.service';
 
 @Component({
   selector: 'app-root',
@@ -38,12 +38,12 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    private readonly propertyFormService: PropertyFormService,
+    private readonly schemaFormService: SchemaFormService,
   ) {
   }
 
 
   ngOnInit(): void {
-    this.propertyForm = this.propertyFormService.toFormGroup();
+    this.propertyForm = this.schemaFormService.newFormGroup();
   }
 }
