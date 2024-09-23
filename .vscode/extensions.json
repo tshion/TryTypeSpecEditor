@@ -1,0 +1,10 @@
+{
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+    "recommendations": [
+        "angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "redhat.vscode-yaml",
+        "visualstudioexptteam.vscodeintellicode",
+    ]
+}

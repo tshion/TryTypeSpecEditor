@@ -1,0 +1,38 @@
+{
+    "name": "try-typespec-editor",
+    "version": "2024.9.23",
+    "scripts": {
+        "ng": "ng",
+        "lint": "ng lint",
+        "prestart": "npm run prebuild debug-preview",
+        "start": "ng serve",
+        "prebuild": "node convert-schema.js",
+        "build": "ng build",
+        "watch": "ng build --watch --configuration development"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "^18.2.5",
+        "@angular/common": "^18.2.0",
+        "@angular/compiler": "^18.2.5",
+        "@angular/core": "^18.2.0",
+        "@angular/forms": "^18.2.5",
+        "@angular/platform-browser": "^18.2.0",
+        "@angular/platform-browser-dynamic": "^18.2.0",
+        "@fortawesome/angular-fontawesome": "^0.15.0",
+        "@fortawesome/free-solid-svg-icons": "^6.5.2",
+        "purecss": "^3.0.0",
+        "rxjs": "~7.8.0",
+        "tslib": "^2.3.0",
+        "zone.js": "~0.14.10"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "^18.2.2",
+        "@angular/cli": "^18.2.2",
+        "@angular/compiler-cli": "^18.2.0",
+        "angular-eslint": "18.3.0",
+        "eslint": "^9.11.0",
+        "typescript": "~5.5.2",
+        "typescript-eslint": "8.6.0"
+    }
+}
