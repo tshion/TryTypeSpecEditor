@@ -1,0 +1,63 @@
+name: Create a release pull request
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  create-pr:
+    if: ${{ github.ref_type == 'branch' && github.ref_name == 'develop' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4.1.7
+
+      # https://github.com/actions/setup-node
+      - uses: actions/setup-node@v4.0.4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+          cache-dependency-path: ./package-lock.json
+
+      # https://github.com/tshion/apply-git-user
+      - uses: tshion/apply-git-user@2.0.4
+        with:
+          user: github-actions
+
+      - name: Decide version
+        id: meta
+        run: |
+          version=$(date +%Y.%m.%d)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Can release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.version }}
+        run: bash .github/scripts/can-release.bash "$TAG"
+
+      - name: Set version
+        env:
+          MESSAGE: "Update ${{ steps.meta.outputs.version }}"
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          npm version "$VERSION" --allow-same-version --no-git-tag-version
+
+          git add package.json
+          git add package-lock.json
+          git commit --message "$MESSAGE"
+          git push origin
+
+      - name: Create pull request
+        env:
+          BASE: released
+          GH_TOKEN: ${{ github.token }}
+          TITLE: "${{ steps.meta.outputs.version }}"
+        run: gh pr create --base "$BASE" --title "$TITLE" --body ""
