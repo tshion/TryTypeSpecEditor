@@ -68,7 +68,11 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      - run: npm run prebuild
+
+      - env:
+          BASE_HREF: "https://${{ github.repository_owner }}.github.io/TryTypeSpecEditor/"
+        run: npx ng build --base-href "$BASE_HREF"
 
       - name: Zip file
         id: zip
