@@ -62,7 +62,7 @@ jobs:
           SCHEMA_VERSION: ${{ inputs.schemaVersion }}
         run: |
           version=$(node -p "require('./package.json').version")
-          tag="$SCHEMA_VERSION_editor$version"
+          tag="${SCHEMA_VERSION}_editor$version"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "$tag"
 
