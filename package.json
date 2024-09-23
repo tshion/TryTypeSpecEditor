@@ -1,6 +1,6 @@
 {
     "name": "try-typespec-editor",
-    "version": "0.0.0",
+    "version": "2024.9.23",
     "scripts": {
         "ng": "ng",
         "lint": "ng lint",
