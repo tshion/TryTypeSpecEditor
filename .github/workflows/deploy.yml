@@ -50,7 +50,8 @@ jobs:
           TAG: ${{ inputs.schemaVersion }}
         run: |
           gh release download "$TAG" --dir schemas --repo "$REPO"
-          ls schemas
+          cd schemas
+          unzip json-schema*.zip
 
       - name: Decide tag name
         id: meta
@@ -58,12 +59,22 @@ jobs:
           SCHEMA_VERSION: ${{ inputs.schemaVersion }}
         run: |
           version=$(node -p "require('./package.json').version")
-          echo "tag=$SCHEMA_VERSION_editor$version" >> "$GITHUB_OUTPUT"
+          tag="$SCHEMA_VERSION_editor$version"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "$tag"
 
       - run: npm ci
 
       - run: npm run build
+
+      - name: Zip file
+        id: zip
+        working-directory: ./dist/try-typespec-editor
+        env:
+          ZIP_NAME: "${{ steps.meta.outputs.tag }}.zip"
+        run: |
+          zip -X -r "$ZIP_NAME" .
+          echo "name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
 
       # https://github.com/actions/configure-pages
       - uses: actions/configure-pages@v5.0.0
@@ -77,6 +88,13 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4.0.5
 
-
-
-      # TODO: リリースノート + asset 添付
+      - name: Create release notes
+        working-directory: ./dist/try-typespec-editor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          ZIP_NAME: ${{ steps.zip.outputs.name }}
+        run: |
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" "$ZIP_NAME" --generate-notes --title "$TAG"
