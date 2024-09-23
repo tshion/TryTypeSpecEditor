@@ -15,6 +15,14 @@
 
 
 
+## デプロイ手順
+1. [create-release-pr](./.github/workflows/create-release-pr.yml) を実行し、Editor 実装のリリースPull Request を作成する
+1. (問題がなければ) 前述のPull Request をマージする
+1. [deploy](./.github/workflows/deploy.yml) に、TryTypeSpec バージョンを指定して実行する
+1. 前述のデプロイしたものがGitHub Pages に反映されていることを確認する
+
+
+
 ## Notes
 ### 初期生成時のコマンド
 ``` shell
@@ -35,6 +43,14 @@ TypeSpec<br />(`※` は独自型) | (code)<br />(`※` は独自型) | HTML 入
 `string` | `TEXT` | `input:text`
 `string \| string` | `SELECT_TEXT` ※ | `select` + `<option>text</option>`
 `url` | `URL` | `input:url`
+
+### バージョンの決め方
+バージョンそのものはGitHub Actions で付与する。
+そのルールは下記の通り。
+
+* Editor 実装自体は、更新日を設定する
+* 最終成果物は `(TryTypeSpec バージョン)_editor(TryTypeSpecEditor バージョン)` を設定する
+    * 併せてgit tag にも設定する
 
 
 

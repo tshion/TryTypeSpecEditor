@@ -1,0 +1,100 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      schemaVersion:
+        description: デプロイしたいTryTypeSpec リポジトリのバージョン
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4.1.7
+        with:
+          ref: released
+
+      # https://github.com/actions/setup-node
+      - uses: actions/setup-node@v4.0.4
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+
+      # https://github.com/actions/create-github-app-token
+      - name: Create token for schema repository
+        uses: actions/create-github-app-token@v1.11.0
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "TryTypeSpec"
+
+      - name: Download schema files
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: "${{ github.repository_owner }}/TryTypeSpec"
+          TAG: ${{ inputs.schemaVersion }}
+        run: |
+          gh release download "$TAG" --dir schemas --repo "$REPO"
+          cd schemas
+          unzip json-schema*.zip
+
+      - name: Decide tag name
+        id: meta
+        env:
+          SCHEMA_VERSION: ${{ inputs.schemaVersion }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          tag="$SCHEMA_VERSION_editor$version"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "$tag"
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Zip file
+        id: zip
+        working-directory: ./dist/try-typespec-editor
+        env:
+          ZIP_NAME: "${{ steps.meta.outputs.tag }}.zip"
+        run: |
+          zip -X -r "$ZIP_NAME" .
+          echo "name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+
+      # https://github.com/actions/configure-pages
+      - uses: actions/configure-pages@v5.0.0
+
+      # https://github.com/actions/upload-pages-artifact
+      - uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: 'dist/try-typespec-editor/browser'
+
+      # https://github.com/actions/deploy-pages
+      - id: deployment
+        uses: actions/deploy-pages@v4.0.5
+
+      - name: Create release notes
+        working-directory: ./dist/try-typespec-editor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          ZIP_NAME: ${{ steps.zip.outputs.name }}
+        run: |
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" "$ZIP_NAME" --generate-notes --title "$TAG"
