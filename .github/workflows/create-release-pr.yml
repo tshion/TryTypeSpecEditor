@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: ./package-lock.json
 
       # https://github.com/tshion/apply-git-user
-      - uses: tshion/apply-git-user@2.0.4
+      - uses: tshion/apply-git-user@2.0.5
         with:
           user: github-actions
 
