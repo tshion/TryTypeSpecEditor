@@ -10,6 +10,14 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
+    groups:
+      angular:
+        applies-to: version-updates
+        patterns:
+        - "@angular*"
+        update-types:
+        - "minor"
+        - "patch"
 
   - package-ecosystem: "npm"
     directory: "/"
