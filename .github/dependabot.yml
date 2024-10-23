@@ -10,6 +10,12 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
     groups:
       angular:
         applies-to: version-updates
@@ -18,9 +24,4 @@ updates:
         update-types:
         - "minor"
         - "patch"
-
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "tuesday"
+        
