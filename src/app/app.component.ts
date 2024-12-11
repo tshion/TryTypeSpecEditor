@@ -5,24 +5,23 @@ import { SideMenuComponent } from './organisms/side-menu.component';
 import { SchemaFormService } from './services/schema-form.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    PropertyFormComponent,
-    SideMenuComponent,
-  ],
-  template: `
+    selector: 'app-root',
+    imports: [
+        PropertyFormComponent,
+        SideMenuComponent,
+    ],
+    template: `
     <app-side-menu [formGroup]="propertyForm" />
     <main>
       <app-property-form [formGroup]="propertyForm" />
     </main>
   `,
-  styles: [
-    `:host {
+    styles: [
+        `:host {
       display: flex;
       flex-direction: row;
     }`,
-    `main {
+        `main {
       background-color: var(--app-color-base);
       color: var(--app-color-base-on);
       flex-grow: 1;

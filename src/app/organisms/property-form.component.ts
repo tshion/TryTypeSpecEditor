@@ -6,24 +6,21 @@ import { faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icon
 import { schemaData } from '../../schema';
 import { NegativeButtonDirective } from '../atoms/negative-button.directive';
 import { NeutralButtonDirective } from '../atoms/neutral-button.directive';
-import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
 import { SchemaFormService } from '../services/schema-form.service';
 
 /**
  * 各編集項目の入力フォーム
  */
 @Component({
-  selector: 'app-property-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    NegativeButtonDirective,
-    NeutralButtonDirective,
-    ReactiveFormsModule,
-    PositivLinkeButtonDirective,
-  ],
-  template: `
+    selector: 'app-property-form',
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        NegativeButtonDirective,
+        NeutralButtonDirective,
+        ReactiveFormsModule,
+    ],
+    template: `
     <form [formGroup]="formGroup" class="pure-form pure-form-aligined">
       @for (group of schemaData.groups; track group) {
         <hgroup>
@@ -105,27 +102,27 @@ import { SchemaFormService } from '../services/schema-form.service';
       }
     </form>
   `,
-  styles: [
-    `.item {
+    styles: [
+        `.item {
       margin: 16px 0;
     }`,
-    `.item > .pure-control-group {
+        `.item > .pure-control-group {
       align-items: center;
       display: flex;
       flex-direction: row;
     }`,
-    `.item > .pure-control-group input {
+        `.item > .pure-control-group input {
       flex-grow: 1;
     }`,
-    `.item > .pure-control-group select {
+        `.item > .pure-control-group select {
       flex-grow: 1;
     }`,
-    `.item-menu {
+        `.item-menu {
       align-items: center;
       display: flex;
       flex-direction: row;
     }`,
-    `button {
+        `button {
       margin: 0 8px;
     }`,
   ],
