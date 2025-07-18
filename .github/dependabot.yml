@@ -10,6 +10,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
+    reviewers:
+      - "tshion"
 
   - package-ecosystem: "npm"
     directory: "/"
@@ -24,4 +26,5 @@ updates:
         update-types:
         - "minor"
         - "patch"
-        
+    reviewers:
+      - "tshion"
