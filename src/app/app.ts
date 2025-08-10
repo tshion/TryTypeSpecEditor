@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PropertyForm } from './organisms/property-form';
 import { SideMenu } from './organisms/side-menu';
@@ -35,11 +35,7 @@ export class App implements OnInit {
 
   protected propertyForm!: FormGroup;
 
-
-  constructor(
-    private readonly schemaFormService: SchemaFormService,
-  ) {
-  }
+  private readonly schemaFormService = inject(SchemaFormService);
 
 
   ngOnInit(): void {

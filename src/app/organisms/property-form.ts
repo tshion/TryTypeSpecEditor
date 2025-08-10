@@ -1,5 +1,5 @@
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -139,11 +139,7 @@ export class PropertyForm {
   @Input()
   public formGroup!: FormGroup;
 
+  protected readonly formService = inject(SchemaFormService);
+
   protected readonly schemaData = schemaData;
-
-
-  constructor(
-    protected readonly formService: SchemaFormService,
-  ) {
-  }
 }

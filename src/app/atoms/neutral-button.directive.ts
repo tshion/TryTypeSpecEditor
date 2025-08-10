@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive } from '@angular/core';
 import { ButtonBaseDirective } from './base/button-base.directive';
 
 /**
@@ -16,10 +16,8 @@ import { ButtonBaseDirective } from './base/button-base.directive';
 })
 export class NeutralButtonDirective extends ButtonBaseDirective {
 
-  constructor(
-    elementRef: ElementRef,
-  ) {
-    super(elementRef);
+  constructor() {
+    super();
 
     const dom = this.dom;
     if (dom) {

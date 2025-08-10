@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -17,14 +17,14 @@ import { TargetBlankDirective } from '../target-blank.directive';
  * * 入力内容のファイル保存
  */
 @Component({
-    selector: 'app-side-menu',
-    imports: [
-        FontAwesomeModule,
-        FormsModule,
-        PositivLinkeButtonDirective,
-        TargetBlankDirective,
-    ],
-    template: `
+  selector: 'app-side-menu',
+  imports: [
+    FontAwesomeModule,
+    FormsModule,
+    PositivLinkeButtonDirective,
+    TargetBlankDirective,
+  ],
+  template: `
     <nav class="pure-menu pure-menu-scrollable">
       <hgroup>
         <h1>TypeSpecEditor</h1>
@@ -58,27 +58,27 @@ import { TargetBlankDirective } from '../target-blank.directive';
       </ul>
     </nav>
   `,
-    styles: [
-        `fa-icon {
+  styles: [
+    `fa-icon {
       margin-left: 4px;
       margin-right: 4px;
     }`,
-        `nav {
+    `nav {
       background-color: var(--app-color-main);
       color:  var(--app-color-main-on);
       height: 100vh;
       width: 360px;
     }`,
-        `nav.pure-menu-scrollable {
+    `nav.pure-menu-scrollable {
       overflow-y: auto;
     }`,
-        `nav > form {
+    `nav > form {
       padding: 8px;
     }`,
-        `nav > hgroup {
+    `nav > hgroup {
       padding: 16px;
     }`,
-        `nav > hgroup > h1 {
+    `nav > hgroup > h1 {
       margin: 0 0 8px 0;
     }`,
   ],
@@ -93,6 +93,8 @@ export class SideMenu implements OnInit {
 
   @Input()
   public formGroup!: FormGroup;
+
+  private readonly formService = inject(SchemaFormService);
 
   /** 関連するリンク一覧 */
   protected readonly links = [
@@ -112,12 +114,6 @@ export class SideMenu implements OnInit {
   }
 
   protected readonly schemaData = schemaData;
-
-
-  constructor(
-    private readonly formService: SchemaFormService,
-  ) {
-  }
 
 
   ngOnInit(): void {

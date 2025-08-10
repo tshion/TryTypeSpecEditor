@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { ElementRef, inject } from '@angular/core';
 
 /**
  * ボタンの基礎実装
@@ -13,15 +13,6 @@ import { ElementRef } from '@angular/core';
  *   }
  *
  *   // your code
- *   constructor(
- *     // your code
- *     elementRef: ElementRef,
- *     // your code
- *   ) {
- *     super(elementRef);
- *     // your code
- *   }
- *   // your code
  * }
  * ```
  */
@@ -29,11 +20,11 @@ export abstract class ButtonBaseDirective {
 
   protected readonly dom: HTMLElement | null;
 
+  private readonly elementRef = inject(ElementRef);
 
-  constructor(
-    elementRef: ElementRef,
-  ) {
-    const dom = elementRef.nativeElement as HTMLElement;
+
+  constructor() {
+    const dom = this.elementRef.nativeElement as HTMLElement;
     switch (dom.tagName) {
       case 'A':
       case 'BUTTON': {
