@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, effect, input } from '@angular/core';
 import { LinkButtonBaseDirective } from './base/link-button-base.directive';
 
 /**
@@ -18,10 +18,7 @@ export class PositivLinkeButtonDirective extends LinkButtonBaseDirective {
   /**
    * @param 遷移先URL
    */
-  @Input()
-  public set appPositiveLinkButton(url: string | null) {
-    this.url = url || '';
-  }
+  public appPositiveLinkButton = input<string | null>();
 
 
   constructor() {
@@ -32,5 +29,9 @@ export class PositivLinkeButtonDirective extends LinkButtonBaseDirective {
       dom.style.backgroundColor = '#0078e7';
       dom.style.color = '#ffffff';
     }
+
+    effect(() => {
+      this.url = this.appPositiveLinkButton() || '';
+    });
   }
 }

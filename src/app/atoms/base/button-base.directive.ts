@@ -7,12 +7,6 @@ import { ElementRef, inject } from '@angular/core';
  * ``` typescript
  * export class ???Directive extends ButtonBaseDirective {
  *   // your code
- *   @Input()
- *   public set ???(enabled: boolean) {
- *     this.enabled = enabled;
- *   }
- *
- *   // your code
  * }
  * ```
  */

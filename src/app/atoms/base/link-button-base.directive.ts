@@ -7,12 +7,6 @@ import { ButtonBaseDirective } from './button-base.directive';
  * ``` typescript
  * export class ???Directive extends LinkButtonBaseDirective {
  *   // your code
- *   @Input()
- *   public set ???(url: string) {
- *     this.url = url;
- *   }
- *
- *   // your code
  * }
  * ```
  */
