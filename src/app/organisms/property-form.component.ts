@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,12 +14,11 @@ import { SchemaFormService } from '../services/schema-form.service';
 @Component({
     selector: 'app-property-form',
     imports: [
-        CommonModule,
-        FontAwesomeModule,
-        NegativeButtonDirective,
-        NeutralButtonDirective,
-        ReactiveFormsModule,
-    ],
+    FontAwesomeModule,
+    NegativeButtonDirective,
+    NeutralButtonDirective,
+    ReactiveFormsModule
+],
     template: `
     <form [formGroup]="formGroup" class="pure-form pure-form-aligined">
       @for (group of schemaData.groups; track group) {
@@ -45,63 +44,65 @@ import { SchemaFormService } from '../services/schema-form.service';
                 </button>
               }
             </header>
-            <div *ngFor="let control of formService.getFormArray(formGroup, item).controls; let i = index" class="pure-control-group">
-              @if (item.isArray) {
-                <button appNegativeButton type="button" (click)="formService.removeFromFormArray(formGroup, item, i)">
-                  <fa-icon [icon]="faTrash" />入力欄削除
-                </button>
-              }
-              @switch (item.inputFormat) {
-                @case ('checkbox') {
-                  <label [for]="formService.getFormControlId(item, i)" class="pure-checkbox">
-                    <input type="checkbox" [formControlName]="i" [id]="formService.getFormControlId(item, i)" />
-                  </label>
+            @for (control of formService.getFormArray(formGroup, item).controls; track control; let i = $index) {
+              <div class="pure-control-group">
+                @if (item.isArray) {
+                  <button appNegativeButton type="button" (click)="formService.removeFromFormArray(formGroup, item, i)">
+                    <fa-icon [icon]="faTrash" />入力欄削除
+                  </button>
                 }
-                @case ('color') {
-                  <input type="color" [formControlName]="i" [id]="formService.getFormControlId(item, i)" />
-                  <span class="pure-form-message-inline">{{ control.getRawValue() }}</span>
+                @switch (item.inputFormat) {
+                  @case ('checkbox') {
+                    <label [for]="formService.getFormControlId(item, i)" class="pure-checkbox">
+                      <input type="checkbox" [formControlName]="i" [id]="formService.getFormControlId(item, i)" />
+                    </label>
+                  }
+                  @case ('color') {
+                    <input type="color" [formControlName]="i" [id]="formService.getFormControlId(item, i)" />
+                    <span class="pure-form-message-inline">{{ control.getRawValue() }}</span>
+                  }
+                  @case ('color_alpha') {
+                    <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
+                      [maxLength]="9" [pattern]="item.pattern!" required="" />
+                  }
+                  @case ('double') {
+                    <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
+                      inputmode="numeric" [pattern]="item.pattern!" required="" />
+                  }
+                  @case ('number') {
+                    <input type="number" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
+                      [min]="item.min ?? null" [max]="item.max ?? null" required="" [step]="item.step" />
+                  }
+                  @case ('select_int') {
+                    <select [formControlName]="i" [id]="formService.getFormControlId(item, i)">
+                      @for (opt of item.options; track opt) {
+                        <option [value]="opt">{{ opt }}</option>
+                      }
+                    </select>
+                  }
+                  @case ('select_text') {
+                    <select [formControlName]="i" [id]="formService.getFormControlId(item, i)">
+                      @for (opt of item.options; track opt) {
+                        <option [value]="opt">{{ opt }}</option>
+                      }
+                    </select>
+                  }
+                  @case ('text') {
+                    <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
+                      [pattern]="item.pattern ?? ''" [required]="item.isArray" />
+                  }
+                  @case ('url') {
+                    <input type="url" [formControlName]="i"  [id]="formService.getFormControlId(item, i)"
+                      [required]="item.isArray" />
+                  }
                 }
-                @case ('color_alpha') {
-                  <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    [maxLength]="9" [pattern]="item.pattern!" required="" />
-                }
-                @case ('double') {
-                  <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    inputmode="numeric" [pattern]="item.pattern!" required="" />
-                }
-                @case ('number') {
-                  <input type="number" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    [min]="item.min ?? null" [max]="item.max ?? null" required="" [step]="item.step" />
-                }
-                @case ('select_int') {
-                  <select [formControlName]="i" [id]="formService.getFormControlId(item, i)">
-                    @for (opt of item.options; track opt) {
-                      <option [value]="opt">{{ opt }}</option>
-                    }
-                  </select>
-                }
-                @case ('select_text') {
-                  <select [formControlName]="i" [id]="formService.getFormControlId(item, i)">
-                    @for (opt of item.options; track opt) {
-                      <option [value]="opt">{{ opt }}</option>
-                    }
-                  </select>
-                }
-                @case ('text') {
-                  <input type="text" [formControlName]="i" [id]="formService.getFormControlId(item, i)"
-                    [pattern]="item.pattern ?? ''" [required]="item.isArray" />
-                }
-                @case ('url') {
-                  <input type="url" [formControlName]="i"  [id]="formService.getFormControlId(item, i)"
-                    [required]="item.isArray" />
-                }
-              }
               </div>
+            }
           </div>
         }
       }
     </form>
-  `,
+    `,
     styles: [
         `.item {
       margin: 16px 0;
