@@ -128,7 +128,7 @@ import { SchemaFormService } from '../services/schema-form.service';
     }`,
   ],
 })
-export class PropertyFormComponent {
+export class PropertyForm {
 
   protected readonly faPlus = faPlus;
 

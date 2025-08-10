@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { PropertyFormComponent } from './organisms/property-form.component';
-import { SideMenuComponent } from './organisms/side-menu.component';
+import { PropertyForm } from './organisms/property-form';
+import { SideMenu } from './organisms/side-menu';
 import { SchemaFormService } from './services/schema-form.service';
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        PropertyFormComponent,
-        SideMenuComponent,
-    ],
-    template: `
+  selector: 'app-root',
+  imports: [
+    PropertyForm,
+    SideMenu,
+  ],
+  template: `
     <app-side-menu [formGroup]="propertyForm" />
     <main>
       <app-property-form [formGroup]="propertyForm" />
     </main>
   `,
-    styles: [
-        `:host {
+  styles: [
+    `:host {
       display: flex;
       flex-direction: row;
     }`,
-        `main {
+    `main {
       background-color: var(--app-color-base);
       color: var(--app-color-base-on);
       flex-grow: 1;
@@ -31,7 +31,7 @@ import { SchemaFormService } from './services/schema-form.service';
     }`,
   ],
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   protected propertyForm!: FormGroup;
 

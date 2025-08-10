@@ -83,7 +83,7 @@ import { TargetBlankDirective } from '../target-blank.directive';
     }`,
   ],
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenu implements OnInit {
 
   protected downloadUrl: string | null = null;
 
