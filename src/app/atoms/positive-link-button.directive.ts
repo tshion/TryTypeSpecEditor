@@ -18,7 +18,7 @@ export class PositivLinkeButtonDirective extends LinkButtonBaseDirective {
   /**
    * @param 遷移先URL
    */
-  public appPositiveLinkButton = input<string | null>();
+  public readonly appPositiveLinkButton = input<string | null>();
 
 
   constructor() {
