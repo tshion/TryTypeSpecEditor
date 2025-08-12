@@ -12,14 +12,14 @@ import { SchemaFormService } from '../services/schema-form.service';
  * 各編集項目の入力フォーム
  */
 @Component({
-    selector: 'app-property-form',
-    imports: [
+  selector: 'app-property-form',
+  imports: [
     FontAwesomeModule,
     NegativeButtonDirective,
     NeutralButtonDirective,
     ReactiveFormsModule
-],
-    template: `
+  ],
+  template: `
     <form [formGroup]="formGroup" class="pure-form pure-form-aligined">
       @for (group of schemaData.groups; track group) {
         <hgroup>
@@ -103,27 +103,27 @@ import { SchemaFormService } from '../services/schema-form.service';
       }
     </form>
     `,
-    styles: [
-        `.item {
+  styles: [
+    `.item {
       margin: 16px 0;
     }`,
-        `.item > .pure-control-group {
+    `.item > .pure-control-group {
       align-items: center;
       display: flex;
       flex-direction: row;
     }`,
-        `.item > .pure-control-group input {
+    `.item > .pure-control-group input {
       flex-grow: 1;
     }`,
-        `.item > .pure-control-group select {
+    `.item > .pure-control-group select {
       flex-grow: 1;
     }`,
-        `.item-menu {
+    `.item-menu {
       align-items: center;
       display: flex;
       flex-direction: row;
     }`,
-        `button {
+    `button {
       margin: 0 8px;
     }`,
   ],
