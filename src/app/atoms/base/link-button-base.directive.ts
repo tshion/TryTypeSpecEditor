@@ -12,11 +12,6 @@ import { ButtonBaseDirective } from './button-base.directive';
  */
 export abstract class LinkButtonBaseDirective extends ButtonBaseDirective {
 
-  constructor() {
-    super();
-  }
-
-
   /** 遷移先URL */
   protected set url(value: string) {
     if (this.dom?.tagName !== 'A') {
