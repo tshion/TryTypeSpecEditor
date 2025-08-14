@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, effect, inject, model } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
-import { tap } from 'rxjs';
 import { schemaData } from '../../schema';
 import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
 import { SaveFormatDto } from '../services/save-format.dto';
@@ -83,7 +81,7 @@ import { TargetBlankDirective } from '../target-blank.directive';
     }`,
   ],
 })
-export class SideMenu implements OnInit {
+export class SideMenu {
 
   protected downloadUrl: string | null = null;
 
@@ -91,8 +89,7 @@ export class SideMenu implements OnInit {
 
   protected readonly faUpRightFromSquare = faUpRightFromSquare;
 
-  @Input()
-  public formGroup!: FormGroup;
+  public readonly formGroup = model.required<FormGroup>();
 
   private readonly formService = inject(SchemaFormService);
 
@@ -116,10 +113,10 @@ export class SideMenu implements OnInit {
   protected readonly schemaData = schemaData;
 
 
-  ngOnInit(): void {
-    this.formGroup.valueChanges.pipe(
-      tap(() => this.updateDownloadUrl()),
-    ).subscribe();
+  constructor() {
+    effect(() => {
+      this.updateDownloadUrl();
+    });
   }
 
 
@@ -139,13 +136,13 @@ export class SideMenu implements OnInit {
 
       const data: SaveFormatDto = JSON.parse(result.toString());
       this._metaTitle = data.title;
-      this.formService.restore(this.formGroup, data.items);
+      this.formGroup.update(current => this.formService.restore(current, data.items));
     }, false);
     reader.readAsText(file, 'UTF-8');
   }
 
   private updateDownloadUrl() {
-    const saveData = this.formService.toSaveFormat(this.formGroup, this._metaTitle);
+    const saveData = this.formService.toSaveFormat(this.formGroup(), this._metaTitle);
     if (!saveData) {
       this.downloadUrl = null;
       return;

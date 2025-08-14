@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PropertyForm } from './organisms/property-form';
 import { SideMenu } from './organisms/side-menu';
@@ -11,9 +11,9 @@ import { SchemaFormService } from './services/schema-form.service';
     SideMenu,
   ],
   template: `
-    <app-side-menu [formGroup]="propertyForm" />
+    <app-side-menu [(formGroup)]="propertyForm" />
     <main>
-      <app-property-form [formGroup]="propertyForm" />
+      <app-property-form [formGroup]="propertyForm()" />
     </main>
   `,
   styles: [
@@ -31,14 +31,9 @@ import { SchemaFormService } from './services/schema-form.service';
     }`,
   ],
 })
-export class App implements OnInit {
-
-  protected propertyForm!: FormGroup;
+export class App {
 
   private readonly schemaFormService = inject(SchemaFormService);
 
-
-  ngOnInit(): void {
-    this.propertyForm = this.schemaFormService.newFormGroup();
-  }
+  protected readonly propertyForm = signal<FormGroup>(this.schemaFormService.newFormGroup());
 }

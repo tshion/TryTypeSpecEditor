@@ -1,5 +1,5 @@
 
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +20,7 @@ import { SchemaFormService } from '../services/schema-form.service';
     ReactiveFormsModule
   ],
   template: `
-    <form [formGroup]="formGroup" class="pure-form pure-form-aligined">
+    <form [formGroup]="formGroup()" class="pure-form pure-form-aligined">
       @for (group of schemaData.groups; track group) {
         <hgroup>
           <h2>{{ group.name }}</h2>
@@ -30,7 +30,7 @@ import { SchemaFormService } from '../services/schema-form.service';
           <div [formArrayName]="item.key" class="item">
             <header class="item-menu">
               @if (item.isArray) {
-                <button appNeutralButton type="button" (click)="formService.addFormArray(formGroup, item)">
+                <button appNeutralButton type="button" (click)="formService.addFormArray(formGroup(), item)">
                   <fa-icon [icon]="faPlus" />入力欄追加
                 </button>
               }
@@ -38,16 +38,16 @@ import { SchemaFormService } from '../services/schema-form.service';
                 <h3>{{ item.key }}</h3>
                 <p>{{ item.label }}</p>
               </hgroup>
-              @if (formService.hasChangedFormArray(formGroup, item)) {
-                <button appNeutralButton type="button" (click)="formService.resetFormArray(formGroup, item)">
+              @if (formService.hasChangedFormArray(formGroup(), item)) {
+                <button appNeutralButton type="button" (click)="formService.resetFormArray(formGroup(), item)">
                   <fa-icon [icon]="faRotateRight" />既定に戻す
                 </button>
               }
             </header>
-            @for (control of formService.getFormArray(formGroup, item).controls; track control; let i = $index) {
+            @for (control of formService.getFormArray(formGroup(), item).controls; track control; let i = $index) {
               <div class="pure-control-group">
                 @if (item.isArray) {
-                  <button appNegativeButton type="button" (click)="formService.removeFromFormArray(formGroup, item, i)">
+                  <button appNegativeButton type="button" (click)="formService.removeFromFormArray(formGroup(), item, i)">
                     <fa-icon [icon]="faTrash" />入力欄削除
                   </button>
                 }
@@ -136,8 +136,7 @@ export class PropertyForm {
 
   protected readonly faTrash = faTrash;
 
-  @Input()
-  public formGroup!: FormGroup;
+  public readonly formGroup = input.required<FormGroup>();
 
   protected readonly formService = inject(SchemaFormService);
 
