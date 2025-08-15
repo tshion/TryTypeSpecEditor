@@ -141,7 +141,6 @@ export class SchemaFormService {
       target.clear();
       controls.forEach(control => target.push(control));
     }
-    return base;
   }
 
   /** 保存データへ変換 */

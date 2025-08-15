@@ -1,4 +1,4 @@
-import { Component, effect, inject, model } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -89,7 +89,7 @@ export class SideMenu {
 
   protected readonly faUpRightFromSquare = faUpRightFromSquare;
 
-  public readonly formGroup = model.required<FormGroup>();
+  public readonly formGroup = input.required<FormGroup>();
 
   private readonly formService = inject(SchemaFormService);
 
@@ -99,16 +99,7 @@ export class SideMenu {
   ];
 
   /** タイトル */
-  private _metaTitle = '';
-
-  protected get metaTitle() {
-    return this._metaTitle;
-  }
-
-  protected set metaTitle(value: string) {
-    this._metaTitle = value;
-    this.updateDownloadUrl();
-  }
+  protected readonly metaTitle = signal('');
 
   protected readonly schemaData = schemaData;
 
@@ -135,14 +126,14 @@ export class SideMenu {
       if (!result) { return; }
 
       const data: SaveFormatDto = JSON.parse(result.toString());
-      this._metaTitle = data.title;
-      this.formGroup.update(current => this.formService.restore(current, data.items));
+      this.metaTitle.set(data.title);
+      this.formService.restore(this.formGroup(), data.items);
     }, false);
     reader.readAsText(file, 'UTF-8');
   }
 
   private updateDownloadUrl() {
-    const saveData = this.formService.toSaveFormat(this.formGroup(), this._metaTitle);
+    const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
     if (!saveData) {
       this.downloadUrl = null;
       return;

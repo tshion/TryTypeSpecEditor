@@ -11,7 +11,7 @@ import { SchemaFormService } from './services/schema-form.service';
     SideMenu,
   ],
   template: `
-    <app-side-menu [(formGroup)]="propertyForm" />
+    <app-side-menu [formGroup]="propertyForm()" />
     <main>
       <app-property-form [formGroup]="propertyForm()" />
     </main>
