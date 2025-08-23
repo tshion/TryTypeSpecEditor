@@ -1,7 +1,9 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { startWith, switchMap } from 'rxjs';
 import { schemaData } from '../../schema';
 import { PositivLinkeButtonDirective } from '../atoms/positive-link-button.directive';
 import { SaveFormatDto } from '../services/save-format.dto';
@@ -105,7 +107,14 @@ export class SideMenu {
 
 
   constructor() {
+    const formValue = toSignal(
+      toObservable(this.formGroup).pipe(
+        switchMap(fg => fg.valueChanges.pipe(startWith(fg.value)))
+      )
+    );
+
     effect((onCleanup) => {
+      formValue();
       const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
 
       let url: string | null = null;
