@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -40,7 +40,7 @@ import { TargetBlankDirective } from '../target-blank.directive';
         <input type="text" id="meta-title" name="meta-title" class="pure-input-1"
           required="" [(ngModel)]="metaTitle" />
 
-        <a class="pure-input-1" download="sample.json" [appPositiveLinkButton]="downloadUrl">
+        <a class="pure-input-1" download="sample.json" [appPositiveLinkButton]="downloadUrl()">
           <fa-icon [icon]="faFloppyDisk" />ファイル保存
         </a>
       </form>
@@ -83,7 +83,18 @@ import { TargetBlankDirective } from '../target-blank.directive';
 })
 export class SideMenu {
 
-  protected downloadUrl: string | null = null;
+  protected readonly downloadUrl = computed(() => {
+    const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
+    if (!saveData) {
+      return null;
+    }
+
+    const blob = new Blob(
+      [JSON.stringify(saveData, null, 4)],
+      { type: 'application/json' },
+    );
+    return window.URL.createObjectURL(blob);
+  });
 
   protected readonly faFloppyDisk = faFloppyDisk;
 
@@ -102,13 +113,6 @@ export class SideMenu {
   protected readonly metaTitle = signal('');
 
   protected readonly schemaData = schemaData;
-
-
-  constructor() {
-    effect(() => {
-      this.updateDownloadUrl();
-    });
-  }
 
 
   protected onFileChanged(event: Event) {
@@ -130,19 +134,5 @@ export class SideMenu {
       this.formService.restore(this.formGroup(), data.items);
     }, false);
     reader.readAsText(file, 'UTF-8');
-  }
-
-  private updateDownloadUrl() {
-    const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
-    if (!saveData) {
-      this.downloadUrl = null;
-      return;
-    }
-
-    const blob = new Blob(
-      [JSON.stringify(saveData, null, 4)],
-      { type: 'application/json' },
-    );
-    this.downloadUrl = window.URL.createObjectURL(blob);
   }
 }
