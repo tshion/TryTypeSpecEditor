@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -83,18 +83,7 @@ import { TargetBlankDirective } from '../target-blank.directive';
 })
 export class SideMenu {
 
-  protected readonly downloadUrl = computed(() => {
-    const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
-    if (!saveData) {
-      return null;
-    }
-
-    const blob = new Blob(
-      [JSON.stringify(saveData, null, 4)],
-      { type: 'application/json' },
-    );
-    return window.URL.createObjectURL(blob);
-  });
+  protected readonly downloadUrl = signal<string | null>(null);
 
   protected readonly faFloppyDisk = faFloppyDisk;
 
@@ -113,6 +102,29 @@ export class SideMenu {
   protected readonly metaTitle = signal('');
 
   protected readonly schemaData = schemaData;
+
+
+  constructor() {
+    effect((onCleanup) => {
+      const saveData = this.formService.toSaveFormat(this.formGroup(), this.metaTitle());
+
+      let url: string | null = null;
+      if (saveData) {
+        const blob = new Blob(
+          [JSON.stringify(saveData, null, 4)],
+          { type: 'application/json' },
+        );
+        url = window.URL.createObjectURL(blob);
+      }
+      this.downloadUrl.set(url);
+
+      onCleanup(() => {
+        if (url) {
+          window.URL.revokeObjectURL(url);
+        }
+      });
+    });
+  }
 
 
   protected onFileChanged(event: Event) {
