@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { LinkButtonBaseDirective } from './base/link-button-base.directive';
 
 /**
@@ -24,10 +24,8 @@ export class PositivLinkeButtonDirective extends LinkButtonBaseDirective {
   }
 
 
-  constructor(
-    elementRef: ElementRef,
-  ) {
-    super(elementRef);
+  constructor() {
+    super();
 
     const dom = this.dom;
     if (dom) {
