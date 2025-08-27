@@ -1,38 +1,45 @@
 {
-    "name": "try-typespec-editor",
-    "version": "2024.9.23",
-    "scripts": {
-        "ng": "ng",
-        "lint": "ng lint",
-        "prestart": "npm run prebuild debug-preview",
-        "start": "ng serve",
-        "prebuild": "node convert-schema.js",
-        "build": "ng build",
-        "watch": "ng build --watch --configuration development"
-    },
-    "private": true,
-    "dependencies": {
-        "@angular/animations": "^18.2.5",
-        "@angular/common": "^18.2.5",
-        "@angular/compiler": "^18.2.5",
-        "@angular/core": "^18.2.5",
-        "@angular/forms": "^18.2.5",
-        "@angular/platform-browser": "^18.2.5",
-        "@angular/platform-browser-dynamic": "^18.2.5",
-        "@fortawesome/angular-fontawesome": "^0.15.0",
-        "@fortawesome/free-solid-svg-icons": "^6.5.2",
-        "purecss": "^3.0.0",
-        "rxjs": "~7.8.0",
-        "tslib": "^2.3.0",
-        "zone.js": "~0.14.10"
-    },
-    "devDependencies": {
-        "@angular-devkit/build-angular": "^18.2.5",
-        "@angular/cli": "^18.2.5",
-        "@angular/compiler-cli": "^18.2.5",
-        "angular-eslint": "18.3.0",
-        "eslint": "^9.11.0",
-        "typescript": "~5.5.2",
-        "typescript-eslint": "8.6.0"
-    }
+  "name": "try-typespec-editor",
+  "version": "2025.8.26",
+  "scripts": {
+    "ng": "ng",
+    "lint": "ng lint",
+    "prestart": "npm run prebuild debug-preview",
+    "start": "ng serve",
+    "prebuild": "node convert-schema.js",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.1.0",
+    "@angular/compiler": "^20.1.0",
+    "@angular/core": "^20.1.0",
+    "@angular/forms": "^20.1.0",
+    "@angular/platform-browser": "^20.1.0",
+    "@fortawesome/angular-fontawesome": "^3.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "purecss": "^3.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.1.5",
+    "@angular/cli": "^20.1.5",
+    "@angular/compiler-cli": "^20.1.0",
+    "angular-eslint": "20.1.1",
+    "eslint": "^9.29.0",
+    "typescript": "~5.8.2",
+    "typescript-eslint": "8.34.1"
+  }
 }

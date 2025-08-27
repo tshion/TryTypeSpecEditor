@@ -17,17 +17,17 @@ jobs:
       pull-requests: write
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
 
       # https://github.com/actions/setup-node
-      - uses: actions/setup-node@v4.0.4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: '.node-version'
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
 
       # https://github.com/tshion/apply-git-user
-      - uses: tshion/apply-git-user@2.0.4
+      - uses: tshion/apply-git-user@2.1.2
         with:
           user: github-actions
 

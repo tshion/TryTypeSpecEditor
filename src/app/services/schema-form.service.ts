@@ -76,6 +76,7 @@ export class SchemaFormService {
         if (schema.max !== undefined) {
           rules.push(Validators.max(schema.max));
         }
+        rules.push(Validators.required);
         return new FormControl(value !== undefined ? value : 0, rules);
       }
       case 'select_int':

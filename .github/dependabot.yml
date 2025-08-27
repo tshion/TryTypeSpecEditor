@@ -10,9 +10,21 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
+    reviewers:
+      - "tshion"
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "tuesday"
+    groups:
+      angular:
+        applies-to: version-updates
+        patterns:
+        - "@angular*"
+        update-types:
+        - "minor"
+        - "patch"
+    reviewers:
+      - "tshion"
